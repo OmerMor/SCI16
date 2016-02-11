@@ -1,0 +1,17 @@
+; 994.SHM -- Produced by SCI Message Editor 3.340
+; This file should only be edited with ME
+
+; NOUNS
+
+(define CANCEL_BUTTON     4)
+(define CHG_DIR_BUTTON    5)
+(define DISK_FULL         1)
+(define GAME_DISK         8)
+(define INSERT_DISK       6)
+(define INVALID_DIR       9)
+(define OK_BUTTON         2)
+(define SAVE_DISK         7)
+(define WRONG_INTERP      3)
+
+; CASES
+
