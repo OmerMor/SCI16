@@ -1,3 +1,3 @@
 (extern
-	NameFind	NAMEFIND	0
+   NameFind NAMEFIND 0
 )

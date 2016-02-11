@@ -1,3 +1,3 @@
 (extern
-	Sort	SORT	0
+   Sort  SORT  0
 )

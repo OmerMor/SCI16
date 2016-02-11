@@ -34,6 +34,6 @@ goto Exit
 echo.                         > remake.log
 echo Remaking system          >> remake.log
 echo.                         >> remake.log
-call x:sc -O @remake.lst 		>> remake.log
+call x:sc -O @remake.lst      >> remake.log
 
 :Exit

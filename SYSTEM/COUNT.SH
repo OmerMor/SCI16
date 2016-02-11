@@ -1,3 +1,3 @@
 (extern
-	Count COUNT	0
+   Count COUNT 0
 )
