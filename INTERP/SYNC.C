@@ -33,11 +33,15 @@ argList;
 {
 	switch (arg(1)) {
 		case QUEUESYNC:
-			if (argCount < 7)
+			if (argCount < 6)
 				QueueSync((Obj *)Native(arg(2)),arg(3));
 			else
-				QueueSync36((Obj *)Native(arg(2)),arg(3),(uchar)arg(4),
-					(uchar)arg(5),(uchar)arg(6),(uchar)arg(7));
+				if (argCount == 6)
+					QueueSync36((Obj *)0,arg(2),(uchar)arg(3),
+						(uchar)arg(4),(uchar)arg(5),(uchar)arg(6));
+				else
+					QueueSync36((Obj *)Native(arg(2)),arg(3),(uchar)arg(4),
+						(uchar)arg(5),(uchar)arg(6),(uchar)arg(7));
 			break;
 		case STARTSYNC:
 			if (syncHandle != NULL)
@@ -243,7 +247,7 @@ Obj	*theSync;
 			NextSync(theSync);
 			return;
 		} else
-			qnum = qndx = 0;
+			qnum = qndx = locCnt = 0;
 			syncIndex = tsync.cue = -1;
 	} else
 		tsync.cue = *(dp+(syncIndex++)) + *(dp+(syncIndex++)) * 256;

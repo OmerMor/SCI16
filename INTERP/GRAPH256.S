@@ -24,6 +24,7 @@ include errmsg.i
 
 ; for air brushing 
 RANDMASK		equ	0b8h
+USABLECOLORS equ  0ECh
 
 
 .DATA
@@ -2787,6 +2788,7 @@ ColorFade endp
 
 
 
+
 FastMatch	proc	uses si di, palOff:word, palSeg:word, redV: word, greenV:word,blueV:word, psize:word, least:word
 LOCAL leastIndex:word
 ; return entry index of palette that is closest to passed R/G/B values
@@ -2801,9 +2803,8 @@ LOCAL leastIndex:word
 	mov	cx, 0
 
 	; move arguments into locals
-	mov	ah, byte ptr redV
-	mov	bl, byte ptr greenV
-	mov	bh, byte ptr blueV
+	mov	bl, byte ptr redV
+	mov	bh, byte ptr greenV
 
 	; address the palette
 	mov	si, palOff
@@ -2815,32 +2816,35 @@ LOCAL leastIndex:word
 		mov	al, es:[si]
 		.if	al & 1
 			mov	al, es:[si + 1]
-			sub	al, ah
-			.if	sign?
+			sub	al, bl
+			.if	carry?
 				neg	al
 			.endif
-			mov	dl, al
-			xor	dh, dh
+         xor   ah,ah
+         mul   al
+			mov	dx, ax
 		
 			; need we examine green?
 			.if	dx <= di
 				mov	al, es:[si + 2]
-				sub	al, bl
-				.if	sign?
+				sub	al, bh
+				.if	carry?
 					neg	al
 				.endif
-				add	dl, al
-				adc	dh, 0
+            xor   ah,ah
+            mul   al
+			   add	dx, ax
 
 				; need we examine blue?
 				.if	dx <= di
 					mov	al, es:[si + 3]
-					sub	al, bh
-					.if	sign?
+					sub	al, byte ptr blueV
+					.if	carry?
 						neg	al
 					.endif
-					add	dl, al
-					adc	dh, 0
+               xor   ah,ah
+               mul   al
+			      add	dx, ax
 
 					; sum of differences is in dx
 					; our current index will be closest match
@@ -2858,7 +2862,7 @@ LOCAL leastIndex:word
 		; end of loop test
 		add	si, 4
 		inc	cx
-	.until cx == psize
+	.until cx == USABLECOLORS
 
 	; return index of least
 	; a value equal to size of palette
@@ -2867,6 +2871,7 @@ LOCAL leastIndex:word
 	ret
 
 FastMatch	endp
+
 
 
 
@@ -3136,5 +3141,6 @@ OldSetPalette endp
 	
 	end
 
+
 
 

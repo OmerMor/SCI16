@@ -196,7 +196,7 @@ word	*args;
 			if (audQndx < MAXQ) {
 				SetAudParms(args);
 				SelectAudio(1);
-				audQcnt[audQndx++] = acc;
+				audQcnt[++audQndx] = acc;
 			} else
 				acc = 0;
 			break;
@@ -227,6 +227,7 @@ word	*args;
 				AudioPlay();
 				acc = savelen;
 			}
+			audQcnt[0] = acc;
 			audioRdy = FALSE;
 			break;
 		case STOP:

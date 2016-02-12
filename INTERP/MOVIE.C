@@ -96,11 +96,9 @@ void RunMovie(int handle, Handle bufferHandle,int speed)
 		if(i > 0) 
 			CopyPage(i * 0x4000,(i - 1) * 0x4000);
 
-		// LoadFrame((char) 0,handle,bufferHandle);
 		LoadFrame((char) i,handle,bufferHandle);
 
 		pageStatus[i] = FILLED;
-//		pageStatus[i] = VACANT;
 
 	}
 
@@ -118,10 +116,8 @@ void RunMovie(int handle, Handle bufferHandle,int speed)
 
 			CopyPage(currentPage * 0x4000,lastPage * 0x4000);
 
-			// LoadFrame((char) 0,handle,bufferHandle);
 			LoadFrame((char) currentPage,handle,bufferHandle);
 			pageStatus[currentPage] = FILLED;
-//			pageStatus[currentPage] = VACANT;
 			i++;
 			++currentPage;
 			if (currentPage > 3)
@@ -215,9 +211,7 @@ void LoadFrame(char page, int handle, Handle bufferHandle)
 
 ++celNo;
 
-// ShowPage(page * 0x4000);
 	FillVideoPage(&xCel);
-// ShowPage(page * 0x4000);
 
 }
 

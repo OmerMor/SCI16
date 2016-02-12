@@ -14,7 +14,6 @@ extern char*	argv[];
 extern char		bssEnd;
 extern char		bssStart;
 extern char		commandLine[];
-extern word		gameCode;
 extern uint		numHandles;
 extern strptr	panicStr;
 extern word		pspSeg;

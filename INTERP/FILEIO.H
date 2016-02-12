@@ -72,7 +72,8 @@ enum	fileFuncs {
 	fileFindFirst,
 	fileFindNext,
 	fileExists,
-	fileRename
+	fileRename,
+	fileCopy
 };
 
 extern	bool		criticalError;
@@ -93,4 +94,3 @@ int		drivecheck(strptr);
 int		rename(char* oldname, char* newname);
 
 #endif
-

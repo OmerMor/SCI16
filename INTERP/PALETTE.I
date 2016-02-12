@@ -30,8 +30,10 @@ PalMatch				proto	r:word, g:word, b:word
 SetResPalette		proto
 RSetPalette			proto	pal:far ptr word, mode:word
 RSetDanPalette		proto	pal:word
+RemapByPercent		proto	
 
 externdef			sysPalette:word
+externdef			rempaPercent:word
 externdef			palStamp:word
 
 endif

@@ -70,6 +70,13 @@ typedef	word		*kArgs;
 #define  DOSETCLUT        1
 #define	NOSETCLUT        0
 
+/* Function codes for KRemapColors */
+#define REMAPOFF 0
+#define REMAPPERCENT 1
+#define REMAPRANGE 2
+#define REMAPGRAY 3
+#define REMAPPERCENTGRAY 4
+
 // sortNode used in Sort
 typedef struct {
 	Obj*	sortObject;
@@ -180,6 +187,7 @@ void  KSetVideoMode(word *);
 void	KSetQuitStr(word *);
 void	KDbugStr(word *);
 void	KDisposeScript(kArgs args);
+void	KRemapColors(word *);
 
 extern int noShowBits;
 

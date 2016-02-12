@@ -16,7 +16,6 @@
 #include	"debug.h"
 #include	"event.h"
 #include	"fileio.h"
-#include	"fileload.h"
 #include	"flist.h"
 #include	"memmgr.h"
 #include	"mouse.h"
@@ -30,6 +29,7 @@
 #include	"stdio.h"
 #include "stdlib.h"
 #include	"string.h"
+#include	"volload.h"
 
 FList	loadList;
 bool	checkingLoadLinks = FALSE;

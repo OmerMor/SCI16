@@ -110,6 +110,7 @@
 #define	E_MSGSTACKSTACKUNDERFLOW 117
 #define  E_BAD_POLYGON     118
 #define	E_INVALID_PROPERTY	119
+#define	E_VER_STAMP_MISMATCH	120
 
 void		InitErrMsgs(void);
 char *	ReadErrMsg(int, char *);

@@ -55,9 +55,9 @@ enum memFuncs {
 };
 
 // Free list structure for pointers
-typedef struct {
-	word				size;	// size of pointer
-	struct block*	next;	// pointer to next free block in list
+typedef struct block_s {
+	word					size;	// size of pointer
+	struct block_s*	next;	// pointer to next free block in list
 } block;
 
 extern block*	freeList;
@@ -103,3 +103,4 @@ void		ShowHunks(void);
 void		ShowHandles(void);
 	 
 #endif
+

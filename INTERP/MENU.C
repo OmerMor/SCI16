@@ -31,9 +31,7 @@ RGrafPort*	menuPort;
 
 static void	near	ClearBar(word);
 
-//#define MENUBARS
-
-#if	defined(MENUBARS)
+#if	defined(TESTER)
 
 static strptr near	GetKeyStr(strptr, word);
 static void	near	Invert(word, word);
@@ -129,7 +127,7 @@ word color;
 global void KAddMenu(args)
 argList;
 {
-#if	!defined(MENUBARS)
+#if	!defined(TESTER)
 
 	args = args;
 	Panic(E_ADDMENU);
@@ -249,7 +247,7 @@ argList;
 global void KDrawMenuBar(args)
 kArgs	args;
 {
-#if	!defined(MENUBARS)
+#if	!defined(TESTER)
 
 	args = args;
 	Panic(E_DRAWMENU);
@@ -266,7 +264,7 @@ kArgs	args;
 global void KSetMenu(args)
 argList;
 {
-#if	!defined(MENUBARS)
+#if	!defined(TESTER)
 
 	args = args;
 	Panic(E_SETMENU);
@@ -303,7 +301,7 @@ argList;
 global void KGetMenu(args)
 argList;
 {
-#if	!defined(MENUBARS)
+#if	!defined(TESTER)
 
 	args = args;
 	Panic(E_GETMENU);
@@ -344,7 +342,7 @@ kArgs	args;
 // Return of -1 indicates no entry selected.  Otherwise, high byte
 // is menu number, low byte is number of entry in menu.
 {
-#if	!defined(MENUBARS)
+#if	!defined(TESTER)
 
 	args = args;
 	Panic(E_MENUSELECT);
@@ -430,7 +428,7 @@ kArgs	args;
 }
 
 
-#if	defined(MENUBARS)
+#if	defined(TESTER)
 
 
 static void near	DrawMenuBar(word show)

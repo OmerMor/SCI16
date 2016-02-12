@@ -1,4 +1,5 @@
 #include "palette.h"
+#include	"cels.h"
 
 #include	"types.h"
 #include	"restypes.h"
@@ -14,6 +15,10 @@
 #include	"errmsg.h"
 
 RPalette sysPalette;
+uint      remapPercent[2] = {0,0}; // this is used to setup the remap table for trans
+									// views.  it must be updated as palette changes.
+uint      remapPercentGray[2] = {0,0}; // the grey percentage 0 to 100 for the remaping of
+										 // trans colors to gray components
 
 static int  near	Match(Guns far *, RPalette far *, ulong);
 static void near	ResetPaletteFlags(RPalette far *, word, word, ubyte);
@@ -85,6 +90,88 @@ void CopyNew2OldPalette(RPalette far * destPal, danPalette far * thePal) {
 
 }
 
+/*
+		This procedure takes each palette color multiplies each of its color components
+		by a percentage between 0 and 255 and finds a best match of that new color in
+		the system palette. storing the resultent of the search in the remap table of
+		the given color index.  thw remap table is then used to remap colors in the
+		VMAP when a color index 254 is placed above them.  This is a pseodo translucent
+		effect
+*/
+
+global void RemapByPercent(int index)
+{
+	int i;
+   int red, green, blue;
+
+		for ( i = 1; i < 236; i++ ) {
+//			the remapPercent is limmeted to 255 so multiplying in an unsigned int
+//			should be sufficient to avoid overflow (255 * 255) < 2 ** 16
+			red = ((uint) sysPalette.gun[i].r * remapPercent[index] / 100U);
+			green = ((uint) sysPalette.gun[i].g * remapPercent[index] / 100U);
+			blue = ((uint) sysPalette.gun[i].b * remapPercent[index] / 100U);
+ //      call remap and make sure the value do not exceed 255
+			remapTable[i+index*256] = (uchar) PalMatch(
+									red > 255U ? 255U : red,
+									green > 255U ? 255U : green,
+									blue > 255U ? 255U : blue
+                         );
+      }
+
+}
+
+ 
+global void RemapToGray(int index)
+{
+   int i, lum;
+
+	for ( i = 1; i < 236; i++ ) {
+		// use unsined values for mult to avoid green * 151 from overflow.  (if green = 255
+      // green * 151 overflows an int but not a uint
+		lum = (((uint) sysPalette.gun[i].r * 77U +
+				(uint) sysPalette.gun[i].g * 151U +
+				(uint) sysPalette.gun[i].b * 28U ) / 256U);
+		remapTable[i+index*256] = (uchar) PalMatch(
+								(int) sysPalette.gun[i].r - (((int) sysPalette.gun[i].r - lum)
+								* (int) remapPercentGray[index] / 100),
+								(int) sysPalette.gun[i].g - (((int) sysPalette.gun[i].g - lum) 
+								* (int) remapPercentGray[index] / 100),
+								(int) sysPalette.gun[i].b - (((int) sysPalette.gun[i].b - lum) 
+								* (int) remapPercentGray[index] / 100)
+                        );
+   }
+		
+}
+
+global void RemapToPercentGray(int index)
+{
+	int i;
+   uint lum;
+   uint red, green, blue;
+
+	for ( i = 1; i < 236; i++ ) {
+		lum = (((uint) sysPalette.gun[i].r * 77U +
+				(uint) sysPalette.gun[i].g * 151U +
+				(uint) sysPalette.gun[i].b * 28U ) / 256U);
+		lum = lum * remapPercent[index] / 100U;
+		red =	(int) sysPalette.gun[i].r 
+               - (((int) sysPalette.gun[i].r - (int) lum)
+					* (int)remapPercentGray[index] / 100);
+		green = (int) sysPalette.gun[i].g 
+               - (((int) sysPalette.gun[i].g - (int)lum)
+					* (int)remapPercentGray[index] / 100);
+		blue = (int) sysPalette.gun[i].b 
+               - (((int) sysPalette.gun[i].b - (int)lum) 
+					* (int)remapPercentGray[index] / 100);
+
+		remapTable[i+index*256] = (uchar) PalMatch(
+								red > 255U ? 255U : red,
+								green > 255U ? 255U : green,
+								blue > 255U ? 255U : blue
+                        );
+   }
+			
+}
 
 void SubmitPalette(danPalette far * thePal) {
 
@@ -141,6 +228,14 @@ void SubmitPalette(danPalette far * thePal) {
 
 		thePal->valid = palStamp;
 		sysPalette.valid = thePal->valid; // ???
+      for (i=REMAPCOLORSTART; i <= REMAPCOLOREND; i++) {
+			if (remapOn[i - REMAPCOLORSTART] == REMAPPERCENT)
+				RemapByPercent(i - REMAPCOLORSTART);
+			else if (remapOn[i - REMAPCOLORSTART] == REMAPGRAY)
+				RemapToGray(i - REMAPCOLORSTART);
+			else if (remapOn[i - REMAPCOLORSTART] == REMAPPERCENTGRAY)
+				RemapToPercentGray(i - REMAPCOLORSTART);
+      }
 	}
 }
 
@@ -437,3 +532,4 @@ unsigned char flags;
 		pal->gun[i].flags |= flags;
 	}
 }
+

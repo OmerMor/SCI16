@@ -5,6 +5,94 @@
 **********************************
 
 -----------------------------------------------------------------------------
+ Ver 1.001.097                                                        8/23/93
+
+ ChriSmith
+
+ fileCopy was added as a new sub-function to the kernel FileIO function.  Two
+ arguments are required: source-file name and destination-file name.  A zero
+ return indicates success; a non-zero return indicates failure.
+ Possible DOS error return codes:
+   2  file or path not found
+   9  file locked
+   13 file specified is a directory or file is read-only or share violation
+   17 file can't be created
+   24 too many files opened
+   28 device is full
+
+-----------------------------------------------------------------------------
+ Ver 1.001.095                                                        5/25/93
+
+ ChriSmith
+
+ The command line argument -? (or any invalid argument) when passed to the
+ non-debug interpreter (SIERRA.EXE) will display the internal version stamp
+ number associated with a game.  Additionally, an interpreter-game version
+ mismatch or failure to version-stamp a game will result in immediate (rather
+ than delayed) termination of the interpreter.
+
+-----------------------------------------------------------------------------
+ Ver 1.001.094                                                        5/25/93
+
+ Martin Peters
+
+ Changes where made to allow transparent views.  Color 254 is now used to
+ represent that the color in the v map should be remaped via the remapBuffer
+ which is set by a kernel call.  The remapBuffer is loaded with either a
+ range modification (all color in range x to y are inc/dec by z) or a percent
+ lumination (all colors remaped to best matched of x persent of color.) if no
+ remaping is specified 254 is treated as skip.  A depth of transparency was
+ added and works on a priority depth.
+
+ Example:
+ a 254 color view at priority 8 is placed over a picture with both pri of 7 
+ and 3. if the remap has no depth specified then the remap view remaps all
+ of the picture below but, if a depth of 2 is specified then the view will
+ modify the priority 7 or even pri 6 color in the vmap but not colors a 3 or 
+ even 5 will be remaped. this allow a depth of field translation.
+
+ the call value is kernel 123 and is call with the following parms
+ call type
+   0 = remap by percent
+   1 = remap by index
+   2 = remap off
+
+ if type = 0
+   follow by
+      percent illumination
+      [depth of field]
+
+ if type = 1
+   follow by
+      start range
+      end range inclusive
+      remap quantity (how much to add or subtract from index)
+      depth of field
+
+ if type = 2
+   no other vars
+
+-----------------------------------------------------------------------------
+ Ver 1.001.092                                                        4/27/93
+
+ ChriSmith
+
+ SCI.EXE is now the only version of the interpreter with debug.  It can be
+ used to run both file-based games and volume-based games.  (Actually, there
+ is a temporary version of SCI.EXE called SCITESTR.EXE which is used to run
+ the tester... it will soon/eventually be deleted when the SCI system classes
+ can once again manage menu bars.)
+
+ SIERRA.EXE is now the only version of the interpreter without debug.  It can
+ be used to run both file-based games and volume-based games.
+
+ The dongle-specific version of the interpreter (BETA.EXE) is defunct.  We
+ now use STAMPVER.EXE to encript a trackable version stamp into each pre-
+ release version of a game before it is sent out to beta testers, reviewers,
+ etc.  SIERRA.EXE will timeout with an error if STAMPVER has not been run
+ against it and the corresponding game volume resource.
+
+-----------------------------------------------------------------------------
  Ver 1.001.091                                                        4/13/93
 
  Ed Critchlow

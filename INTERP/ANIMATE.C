@@ -25,7 +25,7 @@
 #include	"start.h"
 #include	"errmsg.h"
 
-static void	near	SortCast(Obj **, word *, word);
+static void	near	SortCast(Obj **, word *, word *, word);
 static void	near	ReDoStopped(Obj **, byte *, word);
 static void near  doScale(Obj *,Handle, word, word, Handle *, word, word);
 
@@ -64,6 +64,7 @@ word doit;
 	word showAll = picNotValid;
 	Obj *castID[200];
 	word	castY[200];
+   word 	castPri[200];
 	byte	castShow[200];
 
 	word scale = 0,newXDim, newYDim, oldXDim, oldYDim,
@@ -114,6 +115,10 @@ word doit;
 
 		/* save their y positions in castY array */
 		castY[castSize] = IndexedProp(him, actY);
+
+		castPri[castSize] = IndexedProp(him, actPri);
+		if (-1 == castPri[castSize])
+			castPri[castSize] = CoordPri(castY[i]);
 
 		/* zero out every show (no matter what sort does) */
 		castShow[castSize] = 0;
@@ -186,7 +191,7 @@ word doit;
 	}
 
 	/* sort the actor list by y coord */
-	SortCast(castID, castY, castSize);
+	SortCast(castID, castY, castPri, castSize);
 
 /* if showAll is true we must save a "clean" underbits of all stopped actors */
 /* any newly stopped actors are treated equally */
@@ -452,6 +457,7 @@ List *cast;
 	word signal, i, priority, top, castSize, scale;
 	Obj *castID[200];
 	word	castY[200];
+   word	castPri[200];
 
 
 	/* NOTE: this routinemust use the slower GETPROPERTY access method
@@ -472,11 +478,14 @@ List *cast;
 	
 			/* save their y positions in castY array */
 			castY[castSize] = GetProperty(him, s_y);
+			castPri[castSize] = GetProperty(him, s_priority);
+			if (-1 == castPri[castSize])
+				castPri[castSize] = CoordPri(castY[i]);
 			++castSize;
 		}
 
 		/* sort the actor list by y coord */
-		SortCast(castID, castY, castSize);
+		SortCast(castID, castY, castPri, castSize);
 
 		/* now draw the objects from back to front */
 		for (i = 0; i < castSize; i++){
@@ -574,34 +583,44 @@ global void DisposeLastCast()
 
 
 
-static void near SortCast(cast, casty, size)	/* sort cast array by y property */
+static void near SortCast(cast, casty, castpri, size)	/* sort cast array by y property */
 Obj *cast[];
 word casty[];
+word castpri[];
 int size;
 {
 	word i, j, swapped = 1;
 	register Obj *tmp;
-	register word tmpy;
+	register word tmpword;
 
 	for (j = (size - 1) ; j > 0 ; j--){
 		swapped = 0;
 		for (i = 0; i < j; i++){
 			/* base it on y position */
 
-			if (casty[i + 1] < casty[i] 
+			if (castpri[i + 1] < castpri[i]
+				|| (castpri[i + 1] == castpri[i]
+					&& casty[i + 1] < casty[i]	
 #ifdef SORTONZTOO
-			|| (casty[i + 1] == casty[i] 
-			&&	GetProperty(cast[i + 1], s_z) < GetProperty(cast[i], s_z))
+					|| (casty[i + 1] == casty[i]
+						&&	GetProperty(cast[i + 1], s_z) < GetProperty(cast[i], s_z)
+					)
 #endif
+				)
 			){
 				tmp = cast[i];
 				cast[i] = cast[i + 1];
 				cast[i + 1] = tmp;
 
 				/* exchange y positions also */
-				tmpy = casty[i];
+				tmpword = casty[i];
 				casty[i] = casty[i + 1];
-				casty[i + 1] = tmpy;
+				casty[i + 1] = tmpword;
+
+				/* exchange pri positions also */
+				tmpword = castpri[i];
+				castpri[i] = castpri[i + 1];
+				castpri[i + 1] = tmpword;
 
 				swapped = 1;
 			}
@@ -914,3 +933,4 @@ RRect *badRect;
 	RSetPort(oldPort);
 }
 
+

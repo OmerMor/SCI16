@@ -8,11 +8,9 @@
 #include "debug.h"
 #include "debugasm.h"
 #include "dialog.h"
-#include "dongle.h"
 #include "errmsg.h"
 #include "event.h"
 #include "fileio.h"
-#include "fileload.h"
 #include "grtypes.h"
 #include "info.h"
 #include "intrpt.h"
@@ -21,6 +19,7 @@
 #include "palette.h"
 #include "picture.h"
 #include "pk.h"
+#include	"pmachine.h"
 #include "resource.h"
 #include "savegame.h"
 #include "sci.h"
@@ -29,6 +28,7 @@
 #include "stdio.h"
 #include "string.h"
 #include "window.h"
+#include	"volload.h"
 
 jmp_buf		restartBuf;
 char			whereDisk = '\0';
@@ -44,8 +44,6 @@ main(
 	LoadLink far** scan;
 
 	ReadCommandLineArgs(argc, argv);
-
-	CheckDongle();
 
 	InitMem(hunkAvail);
 
@@ -228,7 +226,8 @@ ReadCommandLineArgs(
 #ifdef DEBUG
 						sprintf(str, helpstr, version);
 #else
-						sprintf(str, "version %s", version);
+						interpVerStamp = verStamp + VERSTAMPDELTA;
+						sprintf(str, "version %s/%U", version, interpVerStamp);
 #endif
 						DoPanic(str);
 						break;

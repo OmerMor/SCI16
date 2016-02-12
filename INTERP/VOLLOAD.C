@@ -4,7 +4,6 @@
  */
 
 #include "volload.h"
-#include "fileload.h"
 #include	"audio.h"
 #include	"sync.h"
 
@@ -54,19 +53,36 @@ strptr where;
 	InitList(&loadList);
 
 	if (!ReadConfigFile(where, "RESOURCE.CFG")) {
+#ifndef DEBUG
 		Panic(E_NO_INSTALL, where);
+#else
+		Panic(E_NO_WHERE, where);
+#endif
 	}
 
 	InitPatches();
 
-	/* required resource and resource map files */
-	sprintf(mapName, "%s.%03d", RESVOLNAME, 0);
-	if (CLOSED == (resVolFd = open(mapName, O_RDONLY))){
-		Panic(E_CANT_LOAD, mapName);
+	/* resource and resource map files */
+	/* (these files are required for 'volume-based' versions of a game
+	   and optional for 'file-based versions of a game) */
+	sprintf(volName, "%s.%03d", RESVOLNAME, 0);
+	resVolFd = open(volName, O_RDONLY);
+	resourceMap = LoadResMap(resMapName);
+
+#ifndef DEBUG
+	{
+		ResDirHdrEntry far  *header;
+
+		// Find trackable version stamp in resource map file
+		if (resourceMap) {
+			header = (ResDirHdrEntry far *) *resourceMap;
+			while (header->resType != 255)
+				++header;
+			++header;
+			gameVerStamp = *(long far *)header - VERSTAMPDELTA;
+		}
 	}
-	if (!(resourceMap = LoadResMap(resMapName))){
-		Panic(E_CANT_LOAD, resMapName);
-	}
+#endif
 
 	/* optional 'foreign language' map and resource files */
 	/* (per optional patchDir specification) */
@@ -131,7 +147,6 @@ struct {
 	unsigned	int	compressUsed;
 } dataInfo;
 
-
 global bool
 ResCheck(resType, resId)	/* determine if this resource is locateable */
 ubyte resType;
@@ -141,18 +156,21 @@ uint  resId;
 	ulong		dumylong;
 	char		pathName[64];
 
-	if (FindPatchEntry(resType, resId) == -1)
-		if (resType == RES_AUDIO || resType == RES_WAVE) {
-			pathName[0] = '\0';
-			if ((dumy = ROpenResFile(resType, resId, pathName)) != CLOSED)
-				close(dumy);
-			else if (FindAudEntry(resId) == -1L)
-				return(FALSE);
-		} else if (!FindDirEntry(&dumylong, resType, resId, &dumy))
-			return(FALSE);
-	return(TRUE);
-}
+	pathName[0] = '\0';
 
+	if (FindDirEntry(&dumylong, resType, resId, &dumy))
+		return(TRUE);
+	if (FindPatchEntry(resType, resId) != -1)
+		return TRUE;
+	if ((dumy = ROpenResFile(resType, resId, pathName)) != CLOSED) {
+		close(dumy);
+		return TRUE;
+	}
+	if ((resType == RES_AUDIO || resType == RES_WAVE) &&
+			FindAudEntry(resId) != -1L)
+		return TRUE;
+	return(FALSE);
+}
 
 global bool
 ResCheck36(resType, module, noun, verb, cond, sequ)
@@ -168,7 +186,7 @@ uchar noun, verb, cond, sequ;
 	if (resType == RES_AUDIO36) {
 		if (FindAud36Entry(module, noun, verb, cond, sequ) != -1L)
 			return(TRUE);
-		if ((dumy = ROpenResFile(RES_AUDIO, 0, pathName)) == CLOSED)
+		if ((dumy = ROpenResFile(RES_AUDIO, 0, pathName)) == (uint) CLOSED)
 			return(FALSE);
 		close(dumy);
 		return(TRUE);
@@ -177,7 +195,7 @@ uchar noun, verb, cond, sequ;
 	if (resType == RES_SYNC36) {
 		if (FindSync36Entry(module, noun, verb, cond, sequ, &dumy) != -1L)
 			return(TRUE);
-		if ((dumy = ROpenResFile(RES_SYNC, 0, pathName)) == CLOSED)
+		if ((dumy = ROpenResFile(RES_SYNC, 0, pathName)) == (uint) CLOSED)
 			return(FALSE);
 		close(dumy);
 		return(TRUE);
@@ -185,7 +203,6 @@ uchar noun, verb, cond, sequ;
 
 	return(FALSE);
 }
-
 
 global Handle
 DoLoad(resType, resId)	/* allocate memory and load this resource */
@@ -209,21 +226,30 @@ uint  resId;
 	   is in the Alternate Resource Volume (but only if the ARV is at an
 	   earlier patchDir path specification than the patch file found).
 	 */
-	if (((n = FindPatchEntry(resType, resId)) >= 0) && (altDirNum >= n ||
-						!FindDirEntryMap(&offset, resType, resId, alternateMap)))
-			sprintf(fileName, "%s%s", patchDir[n], ResNameMake(resType, resId));
+	if (
+			((n = FindPatchEntry(resType, resId)) >= 0) &&
+			(altDirNum >= n ||
+			!FindDirEntryMap(&offset, resType, resId, alternateMap))
+		)
+		sprintf(fileName, "%s%s", patchDir[n], ResNameMake(resType, resId));
 	else
 		fileName[0] = '\0';
 
-	if (fileName[0] && (fd = ROpenResFile(resType, resId, fileName)) != -1) {
+	if ((fd = ROpenResFile(resType, resId, fileName)) != CLOSED) {
 		loadedFromFile = TRUE;
 		dataInfo.compressUsed = 0;
 		dataInfo.length = (uword) filelength(fd) - 2;
 
 		read(fd, &typeLen, 1);
-		if (typeLen != resType){
+#ifndef DEBUG
+		if (resType != typeLen) {
 			RAlert(E_RESRC_MISMATCH);
-			exit(0);
+#else
+		if (resType != typeLen && (resType != RES_XLATE || typeLen != RES_MSG)) {
+			RAlert(E_WRONG_RESRC, resType, resId);
+#endif
+			close(fd);
+			ExitThroughDebug();
 		}
 
 		switch(resType) {
@@ -283,8 +309,7 @@ uint  resId;
 		if ((resType == RES_PATCH) && (resId == 10))	{
 			outHandle = GetHandle();
 			*outHandle = Get32KEMS();
-		}
-		else
+		} else
 			outHandle = GetResHandle(dataInfo.length);
 
 		if(dataInfo.compressUsed)
@@ -303,7 +328,6 @@ uint  resId;
 	return(outHandle);
 }
 
-
 /* 
 ** Search the alternate volume then the base volume for the 
 ** requested resType/resId; return offset and resource handle if found.
@@ -316,11 +340,13 @@ ubyte resType;
 uword resId;
 int *resFd;
 {
-	if (FindDirEntryMap(offset, resType, resId, alternateMap)) {
+	if (altVolFd != CLOSED && alternateMap &&
+			FindDirEntryMap(offset, resType, resId, alternateMap)) {
 		*resFd = altVolFd;
 		return(TRUE);
 	}
-	if (FindDirEntryMap(offset, resType, resId, resourceMap)) {
+	if (resVolFd != CLOSED && resourceMap &&
+			FindDirEntryMap(offset, resType, resId, resourceMap)) {
 		*resFd = resVolFd;
 		return(TRUE);
 	}
@@ -371,4 +397,4 @@ Handle resMap;
 	}
 	return(FALSE);
 }
-
+

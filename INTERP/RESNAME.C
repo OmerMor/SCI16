@@ -135,6 +135,9 @@ uint		resId;
 	char	*cp;
 	int	dotIx;
 
+	if (name && *name && *(name+1) == ':')
+		return strcpy(dest, name); 
+
 	strcpy(dest, mask);
 	if (!(cp = strchr(dest, '*')))
 		Panic(E_CONFIG_ERROR, '*', mask);
@@ -150,4 +153,3 @@ uint		resId;
 	   }
 	return dest;
 }
-

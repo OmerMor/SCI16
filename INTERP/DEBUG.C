@@ -895,8 +895,8 @@ PError(memptr ip, uword* sp, int errCode, uint arg1, uint arg2)
 		case E_LEFT_CLONE:
 			sprintf(str, "Clone without script--> %d", arg1);
 			break;
-		case E_NO_DONGLE:
-			sprintf(str, "Your global #101 is not set to %d", arg1);
+		case E_VER_STAMP_MISMATCH:
+			sprintf(str, "The interpreter and game version stamps are mismatched.");
 			break;
 		case E_PACKHANDLE_HEAP:
 			sprintf(str, "PackHandle failure, duplicate table error at $%x in heap", arg1);
@@ -1361,7 +1361,7 @@ DebugInfo(
 	/* Write the ip.
 	 */
 	RMoveTo(XMARGIN, Row(3));
-	sprintf(theStr, "es:%04x%s si:%04x sn:%04d",
+	sprintf(theStr, "es:%04x%s si:%04x sn:%04u",
 	   (int ) (((long) ip) >> 16), 
       defaultES ? "*" : " ",
       (int) ((long) ip & (long) 0xffff),

@@ -243,7 +243,7 @@ kernelDispTbl	label	dword
 	kernel	ATan									
 	kernel	Lock
 
-	dummy												;;;;;;;;;;;;;;;;;;; dummy
+	kernel   RemapColors
 
 	kernel	Message
 	kernel	IsItSkip
@@ -269,3 +269,4 @@ kernelMax	dw	($-kernelDispTbl)/4 - 1
 
 
 	end
+

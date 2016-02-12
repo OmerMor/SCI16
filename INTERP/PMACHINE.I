@@ -53,18 +53,17 @@ E_ZERO_DIVIDE			equ   7
 E_STACK_BLOWN			equ   8
 E_ZERO_MODULO			equ   9
 E_LEFT_CLONE			equ   10
-E_NO_DONGLE				equ   11
+E_VER_STAMP_MISMATCH		equ   11
 E_PACKHANDLE_HEAP		equ   12
 E_PACKHANDLE_HUNK		equ   13
-E_PACKHANDLE_FAILURE	equ   14
-E_ODD_HEAP_RETURNED	   equ   15
+E_PACKHANDLE_FAILURE		equ   14
+E_ODD_HEAP_RETURNED		equ   15
 
 externdef 	opTbl:word
 externdef 	pmCode:FuncPtr
 externdef 	pmCodeSegment:word
 externdef 	gameStarted:bool
 externdef 	theGame:ObjPtr
-externdef 	gameCode:word
 externdef 	ip:memptr
 externdef 	pmsp:wordPtr
 externdef 	acc:word

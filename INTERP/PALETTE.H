@@ -80,6 +80,8 @@ enum palFunc {
 #define	WHITE			255
 
 extern RPalette	sysPalette;
+extern uint       remapPercent[2];
+extern uint       remapPercentGray[2];
 extern uint			palStamp;
 
 void	InitPalette(void);
@@ -92,5 +94,8 @@ void CopyNew2OldPalette(RPalette far * destPal, danPalette far * thePal);
 void SetResPalette(int);
 void RSetPalette(RPalette far *, int);
 void RSetDanPalette(Handle);
+void RemapByPercent(int);
+void RemapToGray(int);
+void RemapToPercentGray(int);
 
 #endif

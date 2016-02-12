@@ -27,7 +27,6 @@
 #include "dos.h"
 #include "stdio.h"
 #include "scifgets.h"
-#include "fileload.h"
 #include "event.h"
 #include "flist.h"
 #include	"pk.h"

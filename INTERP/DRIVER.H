@@ -16,6 +16,7 @@
 #define	D_COMM		5
 #define	D_MOUSE		6
 #define	D_MEMORY		7	/* type used for autodetection purposes only	*/
+#define	D_PRINTER	8
 
 /* Required driver functions.
  */

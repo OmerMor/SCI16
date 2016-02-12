@@ -51,8 +51,15 @@ endY				sword	?
 leftOffset		word	?
 lineWidth		word	?
 realWidth		word  ?
+currMappingIndex  word ?
 
+public remapTable
+remapTable		byte	512 dup (?)
 aLine				byte  320 dup (?)
+public remapOn
+remapOn			word	2	dup (0)
+public remapDepth
+remapDepth		byte	2	dup (0)
 public mirrored
 mirrored			byte	0
 ;public noScale
@@ -73,7 +80,7 @@ MAXPRI			equ	010h	; maximum "normal" priority
 REPEATC			equ	080h
 REPSKIP			equ	040h
 UNIQUE			equ	000h
-
+REMAPOFFSETINC equ   0ffh
 
 
 .CODE
@@ -394,7 +401,7 @@ BuildMirroredLine endp
 ; StandardLine draws the decoded rle buffer from aLine to the virtual screen
 ; for standard non-scaled views (both normal and mirrored)
 
-StandardLine proc near uses si es ds
+StandardLine proc near uses si es ds bx
 
 
 	mov	si, offset aLine		; we are reading from the build line
@@ -417,13 +424,41 @@ StandardLine proc near uses si es ds
 		mov	al, ss:[si]			; the actual color pixel
 		inc	si
 
-		; check for priority and skip color to determine whether to draw it
-		.if	(al != ss:skip) && (dh >= [di])
+		; check for priority and skip color to determine whether to draw it 
+		.if  (al != ss:skip) && (dh >= [di]) && (al < REMAPCOLORSTART)
 			and	byte ptr [di], ah
-			or		byte ptr [di], dl		; put the priority in the priority map
+			or		byte ptr [di], dl
 
-			; plot the color (remapping if required)
-			mov	es:[di], al		; put the pixel to the visual map
+				; plot the color (remapping if required)
+			mov	es:[di], al
+		.elseif (al >= REMAPCOLORSTART) && (al <= REMAPCOLOREND) && (dh >= [di])
+			and	byte ptr [di], ah
+			or		byte ptr [di], dl
+
+			xor	bh,bh   
+			mov 	bl, al
+			sub	bl, REMAPCOLORSTART
+			.if (ss:remapOn[bx] == 0)
+            jmp outloop1
+			.endif
+         .if (ss:remapDepth[bx])
+            mov   al,dh
+            sub   al,ss:remapDepth[bx]
+            .if (al >= [di])
+               jmp outloop1
+				.endif
+			.endif 
+
+         mov	bh,bl
+         xor	bl,bl
+			mov   ss:currMappingIndex, bx
+				; plot the color (remapping if required)
+			mov	bl, byte ptr es:[di]
+			xor	bh,bh
+         add   bx, ss:currMappingIndex
+         mov	al, ss:remapTable[bx]
+			mov	es:[di],al
+outloop1:      	
 		.endif
 		
 		inc	di
@@ -753,14 +788,46 @@ ScaledLine proc near uses si di bx cx es ds
 
 		; check for priority and skip color to determine whether to draw it
 
-		.if  (al != ss:skip) && (dh >= [di])
+		.if  (al != ss:skip) && (dh >= [di]) && (al < REMAPCOLORSTART)
 			and	byte ptr [di], ah
 			or		byte ptr [di], dl
 
 				; plot the color (remapping if required)
 			mov	es:[di], al
+			
+		.elseif (al >= REMAPCOLORSTART) && (al <= REMAPCOLOREND) && (ss:remapOn) && (dh >= [di])
+			and	byte ptr [di], ah
+			or		byte ptr [di], dl
+		  
+			push 	bx
+         xor	bh, bh
+			mov 	bl, al
+			sub	bl, REMAPCOLORSTART
+			.if (ss:remapOn[bx] == 0)
+            jmp outloop2
+			.endif
+         .if (ss:remapDepth[bx])
+            mov   al,dh
+				sub   al,ss:remapDepth[bx]
+            .if (al >= [di])
+					jmp outloop2
+            .endif
+			.endif
+         mov	bh,bl
+         xor	bl,bl
+			mov   ss:currMappingIndex, bx
+					
+				; plot the color (remapping if required)
+			mov	bl, byte ptr es:[di]
+			xor	bh,bh
+         add   bx, ss:currMappingIndex
+         mov	al, ss:remapTable[bx]
+			mov	es:[di],al
+
+outloop2: 
+			pop	bx
 		.endif
-		
+
 		inc	di
 		dec	cx
 

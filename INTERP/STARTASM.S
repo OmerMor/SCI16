@@ -19,6 +19,12 @@ include	start.i
 public	_acrtused
 _acrtused = 9876h
 
+;This is to avoid Borland C++ bringing in its SETARGV module, which
+;does if it sees a main() with arguments
+
+public	_setargv__
+_setargv__	= 0
+
 ;-------------------------------------------------------------------
 
 	.CONST

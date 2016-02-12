@@ -9,6 +9,11 @@
 #include	"grtypes.h"
 #endif
 
+#define	REMAPCOLOR	0xfe
+
+extern unsigned char remapTable[256];
+extern unsigned int remapOn[2];
+extern unsigned char remapDepth[2];
 extern char mirrored;
 
 void		AssertViewPalette(Handle,int);
@@ -25,6 +30,10 @@ int		GetCelYOff(Handle, word, word);
 void		SetNewDim(Handle, int, int, int, int, int, int);
 Hunkptr	GetCelPointer(Handle, word, word);
 void		SetupVMap(word sourcePage);
+
+
+#define REMAPCOLORSTART 	0xfd
+#define REMAPCOLOREND 		0xfe
 
 #endif
 

@@ -33,8 +33,6 @@ global uint		minHunkSize = 0x0000;
 
 global uint		maxHunkUsed = 0;
 
-static char		curDir[] = {".\\"};
-
 static strptr	near gettok(strptr line, strptr tok, strptr sepStr, int size);
 static strptr*	near findConfigEntryType(strptr token);
 static strptr	near storeStr(strptr str);
@@ -130,6 +128,7 @@ strptr	defaultName;
 		else if (strcmp(tok, "language") == 0) { /*PG*/
 			str = gettok(str, tok, sepStr, sizeof(tok));
 			language = atoi(tok);
+			continue;
 		}
 #endif
 
@@ -155,13 +154,6 @@ strptr	defaultName;
 		}
 #endif
 	
-	/* If a patchDir line is not specified, default to
-	 * the current directory.
-	 */
-	if (!patchDir[0]) {
-		patchDir[0] = curDir;
-	}
-
 	return 1;
 }
 

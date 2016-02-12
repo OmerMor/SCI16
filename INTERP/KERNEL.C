@@ -6,13 +6,13 @@
 
 /* SCI-specific header files */
 
+#include "palette.h"
 #include	"animate.h"
 #include "audio.h"
 #include	"cels.h"
 #include "config.h"
 #include	"debug.h"
 #include	"dialog.h"
-#include	"dongle.h"
 #include	"errmsg.h"
 #include	"event.h"
 #include	"fardata.h"
@@ -99,6 +99,7 @@ global void KRecord(void);
 global void KPlayBack(void);
 
 #endif
+#define	CPYBUFLEN	512
 
 
 /* Resource */
@@ -1577,18 +1578,6 @@ argList;
 
 	acc = (word) (sysTicks - lastTick);
 	lastTick = sysTicks;
-   /* This test prevents beta test versions 
-      from being pirated and other users from using
-      this interpreter with any other game then the
-      one it was built for */
-   /* See start.s and pmachine.s for other parts of this test */
-   if (noDongle)
-      {
-      if (!(--noDongle))
-         {
-		   PError(thisIP,pmsp,E_NO_DONGLE,gameCode,0);
-         }
-      }
 }
 
 global void KFormat(args)
@@ -2062,7 +2051,8 @@ argList;
 
 	strptr	buf;
 	uint		mode;
-	int		fd;
+	int		fd, fd2, cnt;
+	char		cpy[CPYBUFLEN];
 
 	diskIOCritical = FALSE;
 
@@ -2123,6 +2113,28 @@ argList;
 		case fileRename:
 			acc = rename(Native(arg(2)), Native(arg(3)));
 			break;
+		case fileCopy:
+			/* args:  (fileCopy), srcname, destname, buffer, length */ 
+			buf = Native(arg(2));
+			fd = open(buf, O_RDONLY);
+			if (acc = criticalError)
+				break;
+			buf = Native(arg(3));
+			fd2 = creat(buf, 0);
+			if (acc = criticalError) {
+				close(fd);
+				break;
+			}
+			while ((cnt = read(fd, cpy, CPYBUFLEN)) != 0) {
+				if (criticalError)
+					break;
+				acc = write(fd2, cpy, cnt);
+				if (criticalError)
+					break;
+			}
+			acc = criticalError;
+			close(fd);
+			close(fd2);
 	}
 
 	diskIOCritical = TRUE;
@@ -2485,14 +2497,9 @@ argList;
 		case 1:			// Set Video Mode to ModeX
 		case 2:
 
-			RHideCursor();			// cursor MUST be off in modeX
-
 			SetVideoMode(mode);
 			currentVideoMode = (char) mode;
 
-			if(mode == 2)
-				RShowCursor();		// cursor can now be on
-					
 			break;
 
 		case 0:
@@ -2518,8 +2525,6 @@ argList;
 			picNotValid = TRUE;
 
 			RShowCursor();		// cursor can now be on
-			if(lastMode == 1)
-				RShowCursor();		// Show it once more (ModeXV forced it off)
 
 			currentVideoMode = 0;
 
@@ -2543,4 +2548,96 @@ global void KDbugStr(args)
 argList;
 {
 	MonoStr((char far *)Native(arg(1)));
+}
+
+void
+KRemapColors(args)
+argList;
+{
+	int i, index;
+
+	if (arg(2) > REMAPCOLOREND || arg(2) < REMAPCOLORSTART)
+		return;
+
+	index = arg(2) - REMAPCOLORSTART; 
+
+	for ( i = 0; i < 256; i++ ) {   
+		remapTable[i+index*256] = (unsigned char) i;
+	}
+
+	switch (arg(1)) { 
+		case REMAPOFF:
+			remapOn[index] = REMAPOFF;
+			break;
+
+		case REMAPPERCENT:
+			remapOn[index] = REMAPPERCENT;
+			if (arg(3) > 255) // remapPercent must be within 0 to 255
+				remapPercent[index] = 255;
+			else if (arg(3) < 0)
+				remapPercent[index] = 0;
+			else
+				remapPercent[index] = arg(3);
+
+			RemapByPercent(index);  // calls palette remaping function in palette
+         if (argCount >= 4)
+				remapDepth[index] = (unsigned char) arg(4) * 0x10;
+         else
+				remapDepth[index] = (char) 0;
+         break;
+
+		case REMAPRANGE:
+			remapOn[index] = REMAPRANGE;
+			for ( i = arg(3); i <= arg(4); i++ ) { 
+				remapTable[i+index*256] = (unsigned char) (i + arg(5));
+         }
+         if (argCount >= 6)
+				remapDepth[index] = (unsigned char) arg(6) * 0x10;
+         else
+				remapDepth[index] = (char) 0;
+			break;
+			
+		case REMAPGRAY:
+			remapOn[index] = REMAPGRAY;
+
+			if (arg(3) > 100) // remapPercent must be within 0 to 100
+				remapPercentGray[index] = 100;
+			else if (arg(3) < 0)
+				remapPercentGray[index] = 0;
+			else
+				remapPercentGray[index] = arg(3);
+
+			RemapToGray(index);  // calls palette remaping function in palette
+         if (argCount >= 4)
+				remapDepth[index] = (unsigned char) arg(4) * 0x10;
+         else
+				remapDepth[index] = (char) 0;
+			break;  
+			
+		case REMAPPERCENTGRAY:
+			remapOn[index] = REMAPPERCENTGRAY;
+
+			if (arg(3) > 100) // remapPercentGray must be within 0 to 100
+				remapPercentGray[index] = 100;
+			else if (arg(3) < 0)
+				remapPercentGray[index] = 0;
+			else
+				remapPercentGray[index] = arg(3);
+
+			if (arg(4) > 255) // remapPercent must be within 0 to 255
+				remapPercent[index] = 255;
+			else if (arg(4) < 0)
+				remapPercent[index] = 0;
+			else
+				remapPercent[index] = arg(4);
+
+			RemapToPercentGray(index);  // calls palette remaping function in palette
+         if (argCount >= 5)
+				remapDepth[index] = (unsigned char) arg(5) * 0x10;
+         else
+				remapDepth[index] = (char) 0;
+			break;
+	
+	}
+   
 }

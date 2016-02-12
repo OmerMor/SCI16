@@ -25,11 +25,13 @@
 #define E_STACK_BLOWN		   8
 #define E_ZERO_MODULO		   9
 #define E_LEFT_CLONE		   	10
-#define E_NO_DONGLE 		   	11
+//unused									11
 #define E_PACKHANDLE_HEAP		12
 #define E_PACKHANDLE_HUNK		13
 #define E_PACKHANDLE_FAILURE	14
 #define E_ODD_HEAP_RETURNED	15
+
+#define VERSTAMPDELTA			0x1234
 
 #define PSTACKSIZE	0x01400
 
@@ -52,6 +54,9 @@ extern uint		numClasses;
 extern bool		defaultES;
 extern word		thisScript;
 extern memptr	thisIP;
+extern long		interpVerStamp;
+extern long		gameVerStamp;
+extern long		verStamp;
 
 void		PMachine(void);
 memptr	GetDispatchAddr(uint, uint);

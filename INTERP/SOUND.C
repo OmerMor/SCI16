@@ -17,7 +17,7 @@
 #include	"sound.h"
 #include	"stdio.h"
 #include	"string.h"
-#include "fileload.h"
+#include	"volload.h"
 
 #ifdef	AMIGA
 
@@ -509,6 +509,7 @@ int how;
 		if (!sn->sSample) {		
 			if (!ResCheck(RES_SOUND,soundId) &&
 					(ResCheck(RES_AUDIO,soundId) || ResCheck(RES_WAVE,soundId))) {
+				sn->sSample = 1;
 				SetProperty(soundObj,s_signal,-1);
 				return;
 			}

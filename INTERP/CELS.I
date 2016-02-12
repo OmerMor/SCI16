@@ -28,6 +28,8 @@ DrawMagCursor	proto	magData:ptr MagCursorStruct,pCursor:ptr pseudoCursor, xpos:w
 AssertViewPalette	proto	view:word, flag:word
 SetupVMap 		proto sourcePage:word
 
+REMAPCOLORSTART equ	0fdh
+REMAPCOLOREND  equ	0feh
+
 endif
 
-

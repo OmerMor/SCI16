@@ -69,6 +69,3 @@
 #define	g_howFast				87
 #define	g_gameTime				88
 #define	g_lastSysGlobal		99
-
-#define	g_gameCode				101
-
