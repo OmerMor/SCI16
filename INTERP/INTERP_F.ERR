@@ -1,0 +1,172 @@
+\\;
+\\; E_DISK_ERROR
+\\1
+Erreur de disque
+%s.
+Presser Retour pour r‚-essayer
+ESC a %s
+
+\\;
+\\; E_CANCEL
+\\2
+annuler
+\\;
+\\; E_QUIT
+\\3
+sortir
+\\;
+\\; E_DISK_ERROR_MSG
+\\4
+Le disque est prot‚g‚
+\\5
+Unit‚ inconnue
+\\6
+Pas Prˆt
+\\7
+?
+\\8
+Erreur CRC
+\\9
+?
+\\10
+Cherche erreur
+\\11
+?
+\\12
+Le secteur n'est pas localis‚
+\\13
+?
+\\14
+Ecrire erreur
+\\15
+Lire erreur
+\\16
+D‚faillance generale
+\\;
+\\; E_OOPS_TXT
+\\25
+Vous avez fait quelque chose que nous n'avions pas pr‚vu.  
+Mais ce que vous avez fait n'est pas n‚cessaire pour terminer le jeu.  
+Essayez d'approcher la situation d'une maniere differente.  
+Erreur %d.  Version %s SCI.
+Fehler %d. SCI Version %s
+\\;
+\\; E_OOPS
+\\26
+Oops!
+\\;
+\\; E_NO_DEBUG
+\\27
+D‚bogage imposible ! erreur #%d 
+\\;
+\\; E_NO_AUDIO_DRVR
+\\28
+Incapable de trouver le p‚riph‚rique Du son '%s'!
+
+\\;
+\\; E_NO_AUDIO
+\\29
+Incapable d'initialiser l'audio
+\\;
+\\; E_NO_CD_MAP
+\\30
+Incapable de localiser le fichier langage cd.
+\\;
+\\; E_INSERT_DISK
+\\31
+Inserer disque %d dans lecteur %s
+et presser RETOUR.%s
+\\;
+\\; E_NO_LANG_MAP	
+\\32
+Incaple de localiser le fichier langage.
+\\;
+\\; E_INSERT_STARTUP
+\\33
+Inserer disque de demarrage %s
+et presser RETOUR.%s
+\\;
+\\; E_NO_KBDDRV
+\\34
+Pas de lecteur pour clavier!
+\\;
+\\; E_NO_HUNK
+\\35
+Memoire insuffisante
+\\;
+\\; E_NO_HANDLES
+\\36
+Absence de logiciel
+\\;
+\\; E_NO_VIDEO
+\\37
+Incapable d'installer le logiciel video.
+\\;
+\\; E_CANT_FIND
+\\38
+Incapable de trouver %s.
+\\;
+\\; E_NO_PATCH
+\\39
+Incapable de localiser Patchbank.
+\\;
+\\; E_NO_MUSIC
+\\40
+Incapable d'initialiser.
+\\;
+\\; E_CANT_LOAD
+\\41
+Ne peut charger %s!
+
+\\;
+\\; E_NO_INSTALL
+\\42
+Ne peut trouver le fichier de configuration: %s
+Essayer le programme d'installation.
+
+\\;
+\\; E_RESRC_MISMATCH
+\\43
+Erreur d'assortissement des types de ressources.
+\\;
+\\; E_NOT_FOUND
+\\44
+%s n'est pas trouve.
+\\;
+\\; E_WRONG_RESRC
+\\45
+Type de ressource erronne!
+Cherche $%x #%d
+\\;
+\\; E_LOAD_ERROR
+\\46
+Erreur de chargement: %s
+Retour pour continuer
+ESC pour sortir
+\\;
+\\; E_MAX_SERVE
+\\47
+Le nombre de serveurs maximum a ‚t‚ d‚passe.
+
+\\;
+\\; E_NO_DEBUGGER
+\\48
+Aucun systeme de debogage possible.
+\\;
+\\; E_NO_MINHUNK
+\\49
+Votre fichier de config.  doit avoir un min de m‚moire.
+\\;
+\\; E_NO_MEMORY
+\\50
+Vous n'avez pas assez de m‚moire pour pouvoir jouer ce jeu, Si vous avvez des programmes r‚sidents en memoire, essayez de les enlever et essayez a nouveau.
+\\;
+\\; E_NO_CONF_STORAGE
+\\51
+Espace de configuration termin‚.					     
+\\;
+\\; E_BAD_PIC
+\\52
+Code image erron‚
+
+

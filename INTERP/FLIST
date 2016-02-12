@@ -1,0 +1,49 @@
+ALTRES   C  7503 DELETE!
+ANIMATE  C 24488 Sci32
+AUDIO    C 15806 ???
+CONFIG   C  6809 Keep (may not be needed, but...) , but file i/o is different
+CTYPE    C  1560 No or minor changes
+DEBUG    C 56462 Can't use without keyboard, so delete (or Mac Debugger???)
+DIALOG   C 11627 No keyboard so... maybe just highlighting of controls, etc???
+DOS      C  5525 Delete except for KValidPath???
+ERRMSG   C  5425 Major changes re how text is displayed
+EVENT    C  4618 Major changes: No keyboard, no mouse, just pad
+FARDATA  C  2055 Delete or change
+FILELOAD C  4300 Moderate to major changes - Use a C++ file class interface???
+FLIST    C  2015 Change names to avoid 3DO conflicts
+GETPATH  C 02555 No or minor changes
+INTRPT	 C 	 Delete - Can't use interupts. Use tasks instead
+KERNEL   C 55851 Major changes in implementation
+LANGUAGE C   550 none or not needed
+LIST     C  6845 No changes? Use 3DO list management???? Avoid 3DO name conflicts
+MENU     C 19135 Changes in input device (no keyboard or joy or mouse)
+MESSAGE  C 13160 Minor changes if any (no keyboard)
+MOTION   C 11254 No changes? (KDoBresen?)
+MOUSE	 C       DELETE - No Mouse (at least not now)
+MOVIE    C  6695 Complete re-write
+OBJECT   C  2847 No changes
+PALETTE  C 10200 Major changes, but also depends on whether we use palettes
+PICTURE  C 10753 Sci32??? + major changes
+PK       C  3602 Major problem with compression
+PLATFORM C   754 very minor changes in a very minor module
+PMACHINE C  1189 ????, but at least it's short
+RESNAME  C  3228 No or minor changes
+RESOURCE C 17500 Sci32 + reorganize.  Possibly major changes
+RESTART  C  1529 Not bad here but ... Possibly just a reboot of some sort
+SAVEGAME C 12060 Major problem.  Possibly similar to Tandy.
+SCALE    C  5103 Probably want to handle scaling via 3DO?? Affects what????
+SCI      C  5935 Moderate changes in startup, etc.
+SCIFGETS C   491 changes, but it's very short
+SCRIPT   C  8745 ????
+SOUND    C 19522 Moderate to major changes.  Whole issue of sound needs to be explored
+START    C  1573 Possibly no changes 
+STDIO    C  3163 Library? (SCI32)
+STDLIB   C  1194 Library? (SCI32)
+STRING   C  5162 Library? No changes for added functions
+SYNC     C  6334 Hopefully minor changes if any
+TEXT     C 10080 Hopefully minor changes.
+TRIG     C  3306 Re-write for math folio
+VOLLOAD  C  9431 Re-write - File read & decompression totally different
+WINDOW   C 10686 goin away?
+
+

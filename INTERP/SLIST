@@ -1,0 +1,30 @@
+ARMASM   S  8482 Delete
+AUD      S  1623 ????
+CELS     S 33266 Complete re-write
+DEBUGASM S  8820 see what happens after C conversion
+DONGLE   S  4318 DELETE
+EMS      S  6451 DELETE
+EVENTASM S  2838 Need some sort of replacement
+EXTMEM   S  6992 DELETE
+FILEIO   S  8465 Complete re-write in c using Folio
+GRAPH    S 20373 To be re-written in "C"?? Whatever will be VERY different
+GRAPH256 S 58467 Complete re-write of any remaining functions
+HFC      S  4988 used???
+HFD      S  5345 used???
+INTASM   S 10761 Will not be used or needed, but ... 
+IO       S   791 re-written or not used
+KERNDISP S  4946 To be re-written in "C"???
+MATH     S  4933 Replaced by math folio
+MEMMGR   S 41296 Larrys manager
+MIDI     S 97147 To be re-written in "C".  Task rather than interrupt?????
+MONO     S  1657 Delete
+MOUSEASM S  5875 Delete
+OBJASM   S 10825 ?????
+OPCODES  S 29461 ??? To remain in assembly???
+PMACHASM S  5512 ??? To remain in assembly???
+SAVEVARS S  1906 C, but saving must be sparse
+STARTASM S  4012 Delete
+STDIOASM S  1961 Delete/re-write
+XMS      S  6120 Delete
+
+

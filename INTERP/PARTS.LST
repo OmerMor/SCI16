@@ -1,0 +1,113 @@
+
+
+              PARTS LIST FOR THE SCI INTERPRETER
+              ----------------------------------
+              ----------------------------------
+              ----------------------------------
+
+
+DATE LAST MODIFIED:
+  7/9/92   by Larry Scott
+  7/18/92  by Larry Scott
+     Deleted some items according to Ken Koch.
+  8/19/92  by Chad Bye
+  9/24/92  by Larry Scott
+
+
+                                    
+     LIBRARIES      
+ ------------------
+|                || 
+|  implode .lib  || 
+|  libh    .lib  || 
+|                || 
+ ------------------
+
+
+
+
+        C FILES                      ASSEMBLY FILES
+ ------------------------------------------------------------ 
+|              |               ||              |             |
+|  altres  .c  |  altres  .h   ||              |  adlib   .i |
+|  animate .c  |  animate .h   ||              |  altres  .i |
+|              |  armasm  .h   ||              |  animate .i |
+|              |  aud     .h   ||  armasm  .s  |  armasm  .i |
+|  audio   .c  |  audio   .h   ||  aud     .s  |  aud     .i |
+|              |  cels    .h   ||              |  audio   .i |
+|  config  .c  |  config  .h   ||  cels    .s  |  cels    .i |
+|  ctype   .c  |  ctype   .h   ||              |  config  .i |
+|              |  dcompres.h   ||              |  ctype   .i |
+|  debug   .c  |  debug   .h   ||              |  debug   .i |
+|              |  debugasm.h   ||  debugasm.s  |  debugasm.i |
+|  dialog  .c  |  dialog  .h   ||              |  dialog  .i |
+|  dos     .c  |  dos     .h   ||              |  dos     .i |
+|              |  driver  .h   ||              |  driver  .i |
+|              |  ems     .h   ||  ems     .s  |  ems     .i |
+|  errmsg  .c  |  errmsg  .h   ||              |  errmsg  .i |
+|  event   .c  |  event   .h   ||              |  event   .i |
+|              |  eventasm.h   ||  eventasm.s  |  eventasm.i |
+|              |  extmem  .h   ||  extmem  .s  |             |
+|  fardata .c  |  fardata .h   ||  fileio  .s  |  fileio  .i |
+|              |  fileio  .h   ||  flist   .s  |  flist   .i |
+|  fileload.c  |  fileload.h   ||  graph   .s  |  graph   .i |
+|  flist   .c  |  flist   .h   ||  graph256.s  |  graph256.i |
+|  getpath .c  |  getpath .h   ||  hfc     .s  |             |
+|              |  graph   .h   ||  hfd     .s  |  hfd     .i |
+|              |  grtypes .h   ||  instasm .s  |             |
+|              |  hfd     .h   ||  intrpt  .s  |  intrpt  .i |
+|              |  implode .h   ||  io      .s  |  io      .i |
+|              |  intrpt  .h   ||  kerndisp.s  |  kerndisp.i |
+|  info    .c  |               ||              |  language.1 |
+|              |  io      .h   ||              |  list    .i |
+|  kernel  .c  |  kernel  .h   ||              |  macro   .i |
+|  language.c  |  language.h   ||  math    .s  |  math    .i |
+|  list    .c  |  list    .h   ||  memmgr  .s  |  memmgr  .i |
+|              |  math    .h   ||  midi    .s  |  midi    .i |
+|              |  memmgr  .h   ||              |  midihnd .i |
+|              |  mono    .h   ||  mono    .s  |             |
+|  menu    .c  |  menu    .h   ||  mouse   .s  |  mouse   .i |
+|  message .c  |  message .h   ||              |  mserial .i |
+|              |  midi    .h   ||  object  .s  |  object  .i |
+|  motion  .c  |  motion  .h   ||  opcodes .s  |             |
+|              |  mouse   .h   ||              |  palette .i |
+|              |  object  .h   ||              |  picture .i |
+|              |  opcodes .h   ||  pmachine.s  |  pmachine.i |
+|  palette .c  |  palette .h   ||              |  resname .i |
+|  picture .c  |  picture .h   ||              |  resource.i |
+|  pk      .c  |  pk      .h   ||              |  restypes.i |
+|  platform.c  |  platform.h   ||  savevars.s  |  savevars.i |
+|              |  pmachine.h   ||              |  sci     .i |
+|  resname .c  |  resname .h   ||              |  script  .i |
+|  resource.c  |  resource.h   ||              |  selector.i |
+|  restart .c  |  restart .h   ||              |  sound   .i |
+|              |  restypes.h   ||  space   .s  |             |
+|  savegame.c  |  savegame.h   ||  start   .s  |  start   .i |
+|              |  savevars.h   ||              |  stdio   .i |
+|  scale   .c  |  scale   .h   ||  stdioasm.s  |             |
+|  sci     .c  |  sci     .h   ||              |  stdlib  .i |
+|  scifgets.c  |  scifgets.h   ||              |  string  .i |
+|              |               ||              |  text    .i |
+|              |  sciglobs.h   ||              |  video   .i |
+|  script  .c  |  script  .h   ||  vram    .s  |             |
+|              |  selector.h   ||  vram256 .s  |             |
+|              |  setjmp  .h   ||  xms     .s  |             |
+|  sound   .c  |  sound   .h   ||              |             |
+|              |  start   .h   ||              |             |
+|              |  stdarg  .h   ||              |             |
+|  stdio   .c  |  stdio   .h   ||              |             |
+|  stdlib  .c  |  stdlib  .h   ||              |             |
+|  string  .c  |  string  .h   ||              |             |
+|  sync    .c  |  sync    .h   ||              |             |
+|  text    .c  |  text    .h   ||              |             |
+|  trig    .c  |  trig    .h   ||              |             |
+|              |  types   .h   ||              |             |
+|              |  view    .h   ||              |             |
+|              |  view2   .h   ||              |             |
+|              |  vm_defs .h   ||              |             |
+|  volload .c  |  volload .h   ||              |             |
+|              |  vram    .h   ||              |             |
+|  window  .c  |  window  .h   ||              |             |
+|              |  xms     .h   ||              |             |
+|              |               ||              |             |
+ ------------------------------------------------------------ 

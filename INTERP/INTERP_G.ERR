@@ -1,0 +1,170 @@
+\\;
+\\; E_DISK_ERROR
+\\1
+Disk Fehler:
+%s.
+ENTER zum Wiederholen.
+ESC zum %s.
+
+\\;
+\\; E_CANCEL
+\\2
+Annullieren
+\\;
+\\; E_QUIT
+\\3
+Aufhîren
+\\;
+\\; E_DISK_ERROR_MSG
+\\4
+Disk ist Schreibgesichert
+\\5
+Unbekannte Einheit
+\\6
+Nicht fertig
+\\7
+?
+\\8
+CRC Fehler
+\\9
+?
+\\10
+Suche Fehler
+\\11
+?
+\\12
+Sektor nicht gefunden
+\\13
+?
+\\14
+Schreib Fehler
+\\15
+Lese Fehler
+\\16
+Genereller Zusammenbruch
+\\;
+\\; E_OOPS_TXT
+\\25
+Sie haben etwas ausprobiert, da· wir nicht in Betracht gezogen haben.  Versuchen Sie ein anderen Weg zu dieser Situation. 
+Fehler %d. SCI Version %s
+\\;
+\\; E_OOPS
+\\26
+Oops!
+\\;
+\\; E_NO_DEBUG
+\\27
+ Debug nicht mîglich! Fehler #%d 
+\\;
+\\; E_NO_AUDIO_DRVR
+\\28
+Kann den Audio Treiber nicht finden '%s'!
+
+\\;
+\\; E_NO_AUDIO
+\\29
+Nicht mîglich die Audio Hardware zu beginnen.
+\\;
+\\; E_NO_CD_MAP
+\\30
+Nicht mîglich die CD-Sprachenkarte Datei zu lokalisieren.
+\\;
+\\; E_INSERT_DISK
+\\31
+Bitte setzen Sie
+Disk ein %d in Laufwerk %s
+und drÅcken Sie ENTER.%s
+\\;
+\\; E_NO_LANG_MAP	
+\\32
+Nicht mîglich die Sprachenkarte Datei zu lokalisieren.
+\\;
+\\; E_INSERT_STARTUP
+\\33
+Bitte setzen Sie den
+Startup Disk in Laufwerk %s
+ein und drÅcken Sie ENTER.%s
+\\;
+\\; E_NO_KBDDRV
+\\34
+Kein Tastaturtreiber!
+\\;
+\\; E_NO_HUNK
+\\35
+Out of hunk!
+\\;
+\\; E_NO_HANDLES
+\\36
+Out of handles!
+\\;
+\\; E_NO_VIDEO
+\\37
+Konnte Videotreiber nicht installieren!
+\\;
+\\; E_CANT_FIND
+\\38
+Konnte nicht %s finden.
+\\;
+\\; E_NO_PATCH
+\\39
+Konnte nicht PatchBank finden.
+\\;
+\\; E_NO_MUSIC
+\\40
+Nicht mîglich Ihre Musik Hardware zu beginnen.
+\\;
+\\; E_CANT_LOAD
+\\41
+Kann nicht %s laden!
+
+\\;
+\\; E_NO_INSTALL
+\\42
+Kann nicht die Konfigurations Datei finden: %s
+Bitte lassen Sie das Installprogramm laufen.
+
+\\;
+\\; E_RESRC_MISMATCH
+\\43
+Resource Type nicht Åbereinstimmend
+\\;
+\\; E_NOT_FOUND
+\\44
+%s nicht gefunden.
+\\;
+\\; E_WRONG_RESRC
+\\45
+Falscher Resource Type!
+Suche nach $%x #%d
+\\;
+\\; E_LOAD_ERROR
+\\46
+Ladefehler: %s
+RETURN geht weiter
+ESC hîrt auf
+\\;
+\\; E_MAX_SERVE
+\\47
+Maximale Nummer fÅr Server Åberschritten.
+
+\\;
+\\; E_NO_DEBUGGER
+\\48
+Kein Debugger erhÑltlich.
+\\;
+\\; E_NO_MINHUNK
+\\49
+Ihre KonfigDatei mu· einen minHunk Wert haben.
+\\;
+\\; E_NO_MEMORY
+\\50
+Sie haben nicht genÅgend SpeicherkapazitÑt um dieses Spiel zu spielen. Sollten Sie irgendeine Resident Software gespeichert haben, bitte entfernen Sie sie und probieren Sie es nocheinmal.
+\\;
+\\; E_NO_CONF_STORAGE
+\\51
+Aus dem Konfigurationsspeicher.
+\\;
+\\; E_BAD_PIC
+\\52
+Schlechter Bildcode
+

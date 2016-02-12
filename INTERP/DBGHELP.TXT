@@ -1,0 +1,62 @@
+(out-file "vocab.995")
+(header (byte #x86 0))	;set up as a vocab resource
+
+(define	NL	'(byte 10))
+
+(
+	"q - quit" NL
+	NL
+	"b - set breakpoint - object,method" NL
+	"B - set breakpoint - object,method (sticky)" NL
+	"<ctrl>B - clear sticky object,method breakpoint" NL
+	"n - set breakpoint - script,offset" NL
+	"N - set breakpoint - script,offset (sticky)" NL
+	"<ctrl>N - clear sticky script,offset breakpoint" NL
+	"R - break at the next return" NL
+	NL
+	"C - clear all breakpoints and exit debug" NL
+	"D - exit debug" NL
+	"` - toggle debug" NL
+	NL
+	"Enter - single step" NL
+	"Tab - step across send"
+)
+
+(
+	"a - inspect ID in accumulator" NL
+	"c - inspect current object" NL
+	"i - inspect object or memory" NL
+	"d - inspect hunk address" NL
+	NL
+	"f - show free heap" NL
+	"s - show sends" NL
+	"r - show resource types" NL
+	"o - show objects in heap" NL
+	"O - show objects w/ addresses" NL
+	"S - show stack usage" NL
+	NL
+	"g - edit global var" NL
+	"l - edit local var" NL
+	"f - edit frame var (temp var)" 
+)
+
+(
+	"i - inspect selector" NL
+	"e - edit heap address or selector" NL
+	"t - trace heap address or selector" NL
+	"T - trace hunk address" NL
+	NL
+	"c - display collection" NL
+	NL
+	"left, right arrow" NL
+	"  - move address by 2 bytes" NL
+	"up, down arrow" NL
+	"  - move address by 16 bytes" NL
+	"pageup, pagedown" NL
+	"  - move address by 64 bytes" NL
+	NL
+	"[ - move to next in doubly-" NL
+	"    linked list" NL
+	"] - move to previous in" NL
+	"    doubly-linked list"
+)
