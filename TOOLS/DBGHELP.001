@@ -1,0 +1,18 @@
+a - inspect ID in accumulator
+c - inspect current object
+i - inspect object or memory
+d - inspect hunk address
+
+f - show free heap
+s - show sends
+r - show resource types
+o - show objects in heap
+O - show objects w/ addresses
+S - show stack usage
+
+g - edit global var
+l - edit local var
+e - edit heap address
+
+v - show version info
+w - move debug window

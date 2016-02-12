@@ -1,0 +1,46 @@
+New SyncEditor Features (7-31-92)
+
+
+(Note:  Loading audio no longer deletes sync marks -- use 'E'rase all syncs)
+
+
+(right-arrow)  Move the current sync mark to the right by one tick.
+(up-arrow)     Move the current sync mark to the right by 'space sync' ticks.
+(left-arrow)   Move the current sync mark to the left by one tick.
+(down-arrow)   Move the current sync mark to the left by 'space sync' ticks.
+(+)            Advance to next cel.
+(-)            Advance to previous cel.
+
+(HOME)         Make the first sync mark the current sync.
+(END)          Make the last sync mark the current sync.
+(DELETE)       Delete the current sync mark.
+(INSERT)       Add a new sync mark 'space sync' ticks after the current sync.
+(TAB)          Make the next sync mark the current sync mark.
+(SHIFT-TAB)    Make the previous sync mark the current sync mark.
+
+A 'cel tag' is now assigned to each cel.  You can click on the tag to change
+it's setting.  Tags can be 3 characters long but only the first character is
+significant.  Specifying a tag causes that cel to become the default sync
+setting and also adds a new sync mark 'space sync' ticks after the current
+sync (if there is room).
+
+A new menu item uder SYNC called 'Tag New Sync' and 'Tag Current Sync'
+toggles between adding a new sync or modifying the current sync (respectively)
+whenever keying-in a cels tag.
+
+Clicking in the graph window now has the following effect:
+  if the play setting is something like |30> for example then
+  left clicking will play 30 ticks from the point-of-click onwards
+  and right clicking will play 30 ticks prior and upto the point-
+  of-click.  To reverse this functionality set <30| instead.
+  A setting such as <30> will play 15 ticks before and after the
+  point-of-click, right or left.
+  If control-clicking, '<' is treated as beggining of window and '>'
+  is treated as end of window.
+
+The warning message that occurred when a sync was added too close to an
+existing sync has been removed.
+
+Press 'ENTER' to playback a segment per the current sync and <30> setting.
+
+Safety check put in to space cels that are very thin.

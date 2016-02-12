@@ -1,0 +1,215 @@
+ SC Script Compiler Changes History
+
+
+------------------------------------------------------------------------------
+ Ver 2.345
+
+ Mark Wilden					26 April 1993
+
+ Create filenames with unsigned numbers, to allow scripts > 32767.  Added
+ other support for large script numbers.
+ Fixed bug that crashed compiler if there was an unterminated string and
+ the remainder of the file contained an underscore.
+
+------------------------------------------------------------------------------
+ Ver 2.342
+
+ Mark Wilden					14 January 1993
+
+ Fixed bug that crashed compiler if there was an error and EMS was being used
+ with QEMM's Stealth option.  Removed -e commandline option accordingly.
+
+------------------------------------------------------------------------------
+ Ver 2.341
+
+ Mark Wilden					8 January 1993
+
+ Prevent naming a procedure the same thing as a class or other symbol.
+ 
+ Call Panic() instead of Fatal() if a source file can't be opened.
+
+------------------------------------------------------------------------------
+ Ver 2.340
+
+ Mark Wilden					28 December 1992
+
+ Prevent adding globals in other than script 0.
+
+------------------------------------------------------------------------------
+ Ver 2.331
+
+ Mark Wilden					18 November 1992
+
+ Compiler could hang after reporting mismatched parentheses because of 
+ incorrect synchronization after error.
+
+------------------------------------------------------------------------------
+ Ver 2.330
+
+ Mark Wilden					2 November 1992
+
+ If two instances are defined with the same name, the compiler will detect and
+ report it.
+
+ Fixed bug where after getting an error in one file, you'd get an incorrect
+ "Only one local statement allowed" error.
+
+------------------------------------------------------------------------------
+ Ver 2.320.000
+
+ Mark Wilden					2 November 1992
+ 
+ Prohibit using [name x] unless name is a global, local, temp or parameter.
+ Errors now skip to closing parenthesis to avoid bogus error messages.
+ Other changes were made to prevent garbage in error messages.
+ 
+------------------------------------------------------------------------------
+ Ver 2.310.000
+
+ Mark Wilden					30 October 1992
+ 
+ _Expression() returns TRUE on a severe error.  This will allow the rest of
+ compilation to proceed in synch and avoid bogus error messages.
+ 
+ GetRest() resets its local input pointer after CloseInputSource().  Not doing
+ this caused the compiler to hang on a severe error that occured while a
+ define was the current input source.
+ 
+------------------------------------------------------------------------------
+ Ver 2.301.000
+
+ Mark Wilden					28 September 1992
+ 
+ EMS wasn't being deallocated on program exit.
+ 
+------------------------------------------------------------------------------
+ Ver 2.300.000
+
+ Mark Wilden					21 September 1992
+ 
+ Conditional compile was changed so that directives are only accepted at the
+ beginning of a line.  This prevents bogus tokenizing errors such as an
+ unterminated string inside a section of code that was conditionally compiled
+ out.
+
+ Conditional compile symbols were changed to C-style:  #if, #elif, #else and
+ #endif.  New symbols were added to test if a symbol has been defined:  #ifdef,
+ #ifndef, #elifdef and #elifndef.  Using #if with an undefined symbol will now
+ give an error instead of creating a symbol with a value of 0.
+
+ Allow initializing an enum with an expression:
+ 
+   (enum 100
+      x
+      y = (+ lastTalkerDefine 3)
+   )
+ 
+ All references to metastrings were removed.  This means that accidentally
+ prefixing a key with ' instead of ` now generates an appropriate error.
+ 
+ Prevent endless loop if a string is unterminated.  Prevent compiler crash
+ by overrunning array bounds if a string is too large.
+ 
+ Report an error if two local statements are seen.
+
+ Publics weren't listed at bottom of assembly list file because the file
+ was closed in Assemble() (then again in CompileFile()). Offset of objects in
+ the publics list of the assembly list file are now correct instead of random.
+ Bug where the last public wasn't listed is fixed.
+ 
+ Free classTbl after use in UpdateClassTbl().
+
+------------------------------------------------------------------------------
+ Ver 2.200.000
+
+ Mark Wilden					1 September 1992
+
+ Code where a selector is used and is not sending a message and is not 
+   prefixed with a # generates the error message "Selector <name> used as value
+   without #".
+ Code where an object is parenthesized generates the error message "No messages 
+   sent to <object-name>.
+ Redefining a define doesn't generate a warning unless the definition actually
+   changes, ignoring whitespace.
+ If the next to the last clause of a switch or cond contains no code, it is
+   no longer ignored.
+ More than one definition of a method for an object or class produces the 
+   error message "Method already defined: <method-name>".
+ Disk errors, such as running out of space, are detected and reported.
+ Else clause not at end of cond or switch statement generates the error message
+   "Else must come at end of cond [or switch] statement".
+ Multiple else clauses in cond or switch statement generates the error message
+	"Multiple else clauses".
+ Memory needed for writing 997.VOC is allocated before the file is truncated,
+   so if the memory allocation request fails, the file is not left truncated.
+ Vocabulary and metastring functions were removed, and 900.VOC is not read,
+   saving about 7K of memory.
+ Prevent writing to list file when list file isn't open, causing lockups.
+ -e command line option added to prevent using EMS memory, which crashes some
+   systems using QEMM's Stealth option.
+ Code cleaned up and made more object-oriented.
+
+------------------------------------------------------------------------------
+ Ver 2.130.000
+
+ Mark Wilden					19 August 1992
+
+ The CLASSES Brief browser file is now always written when a class is added,
+ just as CLASSDEF is.  Writing this file used to take six seconds and now
+ takes less than one.
+
+------------------------------------------------------------------------------
+ Ver 2.121.000
+
+ Mark Wilden					18 August 1992
+
+ Several error message formatting bugs were fixed, including missing carriage
+ returns and missing messages on the screen when output is directed to a
+ file, and garbage file names in messages.
+
+------------------------------------------------------------------------------
+ Ver 2.120.000
+
+ Mark Wilden					17 August 1992
+
+ The compiler uses 64K of expanded memory, if available.
+
+------------------------------------------------------------------------------
+ Ver 2.111.000
+
+ Mark Wilden					16 August 1992
+
+ Fixed bug where a selector that was used as an argument was always treated
+ as a property even if it was a method.  This caused garbage to be retrieved
+ from the object, instead of giving the selector number.
+ 
+ Fixed bug where an empty last clause of a switch statement would cause a
+ more or less random jump into code somewhere.
+
+ Removed unused SwitchTo() function.
+
+------------------------------------------------------------------------------
+ Ver 2.110.000
+
+ Mark Wilden					16 August 1992
+
+ Room 0 no longer has to be compiled separately or at head of build list.
+
+------------------------------------------------------------------------------
+ Ver 2.100.000
+
+ Mark Wilden					14 August 1992
+
+ Converted to Borland C++ 3.1, with 386 code generation and better
+ optimizations.  Fixed bug that let optimization "get lucky" sometimes
+ and produce slightly smaller code, but that had the effect of producing
+ different output at different times on the same source.
+
+------------------------------------------------------------------------------
+
+ Ver 2.000.000
+
+ Jeff Stephenson				11 February 1992
+
+ First C++ version.  Separate heap and hunk resources
+

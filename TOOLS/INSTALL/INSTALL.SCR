@@ -1,0 +1,73 @@
+clear
+space %1: 7500	NoSpace
+godir %1:%4	CantCreate
+rem	Copy over the necessary files.
+echo Copying Startup Files ...
+copy %2:*.drv
+copy %2:scid*.exe
+copy %2:interp.err
+copy %2:version
+copy %2:tandy3v.drv
+copy %2:install.*
+copy %2:resource.map
+copy %2:ra.bat
+copy %2:sierra.bat
+
+echo %3 > resource.cfg
+
+echo Copying Game files...
+del resource.000
+
+exists %2:resource.p01 Please insert the disk labeled "Disk 1" in drive %2:.
+copy resource.000 + %2:resource.p01
+
+exists %2:resource.p02 Please insert the disk labeled "Disk 2" in drive %2:.
+copy resource.000 + %2:resource.p02
+
+exists %2:resource.p03 Please insert the disk labeled "Disk 3" in drive %2:.
+copy resource.000 + %2:resource.p03
+
+exists %2:resource.p04 Please insert the disk labeled "Disk 4" in drive %2:.
+copy resource.000 + %2:resource.p04
+
+exists %2:resource.p05 Please insert the disk labeled "Disk 5" in drive %2:.
+copy resource.000 + %2:resource.p05
+
+exists %2:resource.msg Please insert the disk labeled "Message/Audio" in drive %2:.
+copy %2:resource.msg 
+copy %2:message.map
+copy %2:resource.aud
+%2:dcompaud .\ > nul
+
+:exit
+clear
+echo
+echo ÿTo play NOW:
+echo ÿ   Type RA [ENTER].
+echo
+echo ÿTo play LATER:
+echo ÿ   From the directory of %1:%4,
+echo ÿ   Type RA and press [ENTER].
+echo
+pause
+goto Exit2
+
+
+:NoSpace
+clear
+echo
+echo There is not enough space on %1: to install Laura Bow II!
+echo 7.5 megabytes of disk space are necessary.
+echo
+pause
+
+
+:Exit2
+end
+
+
+:CantCreate
+alert Unable to create directory %1:%4
+end
+
+

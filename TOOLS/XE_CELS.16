@@ -1,0 +1,59 @@
+;cel number
+;    phoneme code(s)
+;        example
+
+7    IY     bEEt
+5    EH     bEt
+6    AA     hOt
+6    AO     tAlk
+3    ER     bIRd
+6    AX     About
+7    IH     bIt
+5    AE     bAt
+6    AH     Under
+3    UH     lOOk
+8    OH     bOrder
+7    IX     solId
+5    EY,IY  mAde
+8    OY,IY  bOIl
+8    OW,W   lOw
+6    AY,IY  hIde
+6    AW,W   pOWer
+5    UW,W   crEW
+3    R      Red
+4    W      aWay
+2    M      Men
+7    NX     siNG
+9    S      Sail
+1    F      Fed
+9    Z      haS
+1    V      Very
+12   CH     CHeck
+5    /H     Hole
+2    B      But
+10   D      Dog
+14   G      Guest
+13   L      yeLLow
+10   Y      Yellow
+10   N      meN
+12   SH     ruSH
+11   TH     THin
+12   ZH     pleaSure
+11   DH     THen
+12   J      JuDGe
+14   /C     loCH
+2    P      Put
+10   T      Toy
+14   K      Camp
+10   DX     piTy
+14   Q      kitt_en
+3    RX     cAR
+5    QX     
+6    UL     
+6    UM  
+6    UN  
+13   LX     caLL
+7    IL  
+7    IM  
+7    IN  
+0

@@ -1,0 +1,10 @@
+VOL1:\PUBLIC\TOOLS\DRIVERS\NON_SHIP (X:DRIVERS\NON_SHIP)
+--------------------------------------------------------
+
+The drivers in this directory are either:
+
+   1) obsolete, but we want to keep copies to support older games
+   2) not popular enough to justify shipping with every game, but
+         available for the BBS's
+
+None of these drivers should be shipped with a game.

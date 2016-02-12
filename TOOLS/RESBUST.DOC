@@ -1,0 +1,74 @@
+     A time and space saving procedure for making volumes is now in place.
+
+Rather than make several distinct resource volumes for a floppy-deliverable
+
+product, a single 'massive' resource volume can be made which is splitable
+
+at any desired byte location and subsequently recombined during the instal-
+
+lation process.  Multi-declared resources are automatically dealt with 
+
+during the makevols process resulting in quicker and smaller builds and
+
+installations.  Splitting the resource file judiciously can result in full
+
+utilization of diskette space.  The utility 'RESBUST.EXE' is used to
+
+bust-up a resource file into parts.  The 'COPY' directive is used in the
+
+install script to recombine the parts into a single resource.  The recom-
+
+bination process could also be done directly via the 'RESBUILD.EXE' utility.
+
+Remove all VOLUME and VOLUMES directives from the RESOURCE.TXT file in order
+
+to generate a single resource file.
+
+
+
+Advantages of this scheme over the old multi-resource file method:
+
+
+ -- Creating a RESOURCE.TXT file becomes a much simpler task.  There is no
+    need to be concerned with inadvertently duplicating resources since the
+    makevols process will automatically bypass all duplicates.  Futhermore,
+    there is no need to intentionally duplicate resources across volumes for
+    readier access -- all resources will reside in a single volume.  This
+    factor will save a significant amount of programmer time and effort.
+
+ -- Disk space is freed-up due to the elimination of intentional and un-
+    intentional resource duplicates.
+
+ -- Disk space can become fully utilized since the single resource file can
+    be split up at any desired byte location and into as many pieces as
+    desired.  Each disk can be filled to the last byte by simply specifying
+    appropriate command-line arguments to RESBUST.EXE (Note: this is 1457664
+    for 1.44MB disks).  If more space is needed on disk#1 to add another
+    patch, for example, just modify the first command-line argument as needed
+    and the rest of the arguments remain the same as before.
+
+ -- Duplication time and costs for the shipping product are greatly reduced
+    when a disk or two less is required.  Conversly, for the same number of
+    disks as before, alot of additional features (such as an expanded audio
+    track) can be added.
+
+ -- The makevols procedure will be speedier since duplicate resource requests
+    will be recognized and skipped before any IO takes place.  The instal-
+    lation time for the end user (and QA!) is likewise minimized due to the
+    smaller total resource size.
+
+ -- The structure of a map file becomes simpler since the volume number is
+    no longer a factor.  The map file is smaller and since it is always
+    present in memory -- that frees up a bit more of hunk for other uses.
+    Locating a resource via the map file becomes simpler and quicker -- the
+    first matching hit is the correct one (previously we had to check all
+    possible matches since one might be on the current volume).
+
+ -- There is only one resource file instead of several.  That eliminates the
+    repeated opening and closing of resource files (since only one was kept
+    open at a time) -- a relatively slow IO operation.
+    
+
+
+
+

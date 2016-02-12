@@ -1,0 +1,15 @@
+VOL1:\PUBLIC\TOOLS (X:)
+-----------------------
+
+The files in this directory are used during the development of a game.  Most
+are built by Sierra.  Since they are development tools, they may change in
+form and/or function as game resources change.
+
+Therefore, when a game is shipped (or its system is frozen), this entire
+directory should be copied into a PROG\TOOLS directory in the game's
+directory structure.
+
+The files in this directory are periodically maintained and updated, and the
+housekeeping of this directory is the responsibility of Game Services. 
+Obsolete files are routinely archived and removed.
+

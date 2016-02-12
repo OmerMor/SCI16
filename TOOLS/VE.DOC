@@ -1,0 +1,10 @@
+4/30/92  a new version of the View Editor (2.11) is now on the net.
+This version fixes a bug caused when users adjust the size of a cel
+to 0 or pull the lower right corner higher than the upper left
+corner.  In addition it fixes a problem with when importing a cel
+from a picture.  That process would change color 16 (10 hex) to skip
+color.  If there are any problems created by this change, please let
+me (Ken Koch) know.
+
+
+

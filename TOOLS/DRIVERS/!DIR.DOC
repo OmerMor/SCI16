@@ -1,0 +1,6 @@
+VOL1:\PUBLIC\TOOLS\DRIVERS (X:DRIVERS)
+--------------------------------------
+
+The drivers in this directory are the currently supported shipping drivers. 
+Unless otherwise determined by management, each game should ship will all the
+drivers in this directory.

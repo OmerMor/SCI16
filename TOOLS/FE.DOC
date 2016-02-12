@@ -1,0 +1,24 @@
+ FE Font Editor Changes History
+
+------------------------------------------------------------------------------
+ Ver 2.211
+
+ Mark Wilden					8 January 1992
+
+ Fixed bug that trashed character or locked up if you click quickly and
+ frequently in non-edit area of edit window.
+
+------------------------------------------------------------------------------
+ Ver 2.210
+
+ Mark Wilden					28 December 1992
+
+ After increasing number of characters in font, the added characters were
+ garbagy, instead of being solid black blocks.
+ 
+ Added merging capability:  if a file to be opened has fewer characters than
+ the current file, it can optionally have the extra characters from the current
+ file added to it.
+
+------------------------------------------------------------------------------
+

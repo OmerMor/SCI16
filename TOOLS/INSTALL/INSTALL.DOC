@@ -1,0 +1,1209 @@
+Install                                              November 16, 1993
+                                                                Page 2
+                                   
+                       I N S T A L L  3 . 6 7 0
+                                   
+                           21 November 1993
+                                   
+                              Mark Wilden
+                                   
+
+
+This manual describes Install, a program that installs a program on a
+user's hard or floppy disk.  Install shows the user the hardware and
+software options it thinks are most suitable, asks for his
+confirmation of these choices, then runs a script which typically
+creates a subdirectory for the game on the user's hard disk and copies
+the necessary files to it.
+
+This manual is updated regularly and is stored in ASCII format with
+the rest of Install, in the X:INSTALL directory.  See the last section
+"Changes" for a revision history.
+
+
+Starting Install
+
+The user starts the Install program by logging onto the disk drive
+that contains the Install program and typing INSTALL.  After a pause
+to read files from the installation disk, an introductory screen is
+displayed.  The user can press ENTER at this screen to continue or ESC
+to cancel installation.
+
+
+Choosing a Destination Drive
+
+The next screen asks the user to select which hard disk to install the
+game to only if the install is invoked from drives A:, B: or a CD
+drive.  Only drives C: and above are allowed (unless the FLOPPY=YES
+option is present in RESOURCE.CFG--see below).  The user can press ESC
+to cancel installation at this point, or select a drive with
+sufficient space on it.  The amount of space the game takes should be
+specified in RESOURCE.CFG with an entry of the form 'space=x' where x
+represents the amount of space in K.  If this entry is not present in
+RESOURCE.CFG, no space checking is done.
+
+If the Install program can determine that a particular drive has been
+compressed via Stacker or a similar utility, it will put a '?' beside
+that drive if there isn't at least twice the required space available.
+This is because our games are already compressed, and disk compression
+utilities can't take that into account.
+
+The Install program will look on the hard disk specified to see if the
+game was previously installed, in which case the user's old choices
+will be used on the next screen.
+
+
+Confirming Installation Choices
+
+The Installation Choices screen shows the user what hardware and
+software options it thinks are most suitable for running the game.  At
+this point the user can:
+
+     Choose "View documention update in README file" (if there is a
+          file called README or READ.ME on the installation disk).
+     Choose "Make bootable floppy disk" to make a boot disk,
+     Choose "Accept these choices" to continue the installation,
+     Choose "Cancel installation" to return to DOS,
+     Press ESC to return to the previous screen (the destination drive
+          choice), or
+     Move the highlight to a choice and press ENTER to change it.
+
+Changing an Installation Choice
+
+If the user wants to change an installation choice, a menu is shown
+with the possible choices for that item on it.  In general, the
+choices will be listed in decreasing order of desirability.  A check
+mark is displayed beside each choice that the Install program has
+detected the user's machine can support.
+
+The user can put the highlight on a given choice and press F1 to get
+help for that choice, if available.  In addition, some choices will
+bring up an additional screen of information if the user chooses it.
+If the user selects a choice that the program feels is not supported
+by his hardware, a warning message is displayed and the user is asked
+to confirm his choice.
+
+
+Installation Menus
+
+Here are the specific installation choice menus for SCI games (TSN may
+have different screens).  If there is only one choice possible for a
+given type of option, the choice won't be displayed on the
+Installation Choices screen (such as the Video choice for a VGA-only
+game).  If there are no choices possible (because there are no driver
+files for that choice present), no choice will be displayed on the
+Installation Choices screen.
+
+Video     This menu shows the video card and monitor choices.  The
+          Install program can detect what video card the user has, so
+          he should rarely have to use this menu to change the default
+          video choice.
+          
+Sound     Here is where the user selects what sound card to use.
+          Again, we can usually detect this, with the exception of the
+          Game Blaster card.  Also, we consider that the user has a
+          Roland card if he has any MIDI device attached.
+          
+Audio     This menu allows users of CD games to specify the driver to
+          use for speech and other CD audio.
+          
+Joystick  This menu allows the user to specify whether to use his
+          joystick or not.  We detect the presence of a joystick.
+          
+Keyboard  This menu allows the user to specify whether to use an IBM
+          or a Tandy keyboard.  We do not detect the Tandy keyboard.
+          
+Mouse     We detect whether the user has a mouse, but this menu allows
+          him to choose not to have the game use it.
+          
+Memory    This menu lets the user turn off our use of his extra memory
+          (expanded, extended, and/or XMS memory) if he has any.
+          Pressing F1 at this menu shows the user which of these types
+          of extra memory he has, and how much of each is available.
+          
+Directory This is an input field that allows the user to choose the
+          directory where game files will be placed.  The default is
+          the value, if any, is listed in the RESOURCE.CFG file. The
+          value entered by the user is checked for validity.
+          
+You can prevent the Mouse and Memory menus from appearing (since they
+have no files associated with them) by including lines of the form
+
+     mouseDrv = none
+
+or
+
+     memoryDrv = none
+
+in the RESOURCE.CFG that you ship.  This is appropriate for SCI32
+games.
+
+
+Make Bootable Floppy Disk
+
+This procedure formats a boot disk with minimal AUTOEXEC.BAT and
+CONFIG.SYS files.  On DOS 5.0 80386 systems, it loads DOS, the mouse
+driver and other needed drivers high for real mode games; for SCI32
+protected mode games it leaves them in low memory.
+
+These are the RESOURCE.CFG entries that indicate the minimal
+configuration expected in order to make the boot disk:
+
+     minCPU = 386 (only "386" is currently supported)
+     minDOS = 500 (or 401 or 330, etc.)
+     mode = real (for SCI16 games)
+     minEMS = 200 (in kilobytes)
+
+If minEMS is present and mode=real, EMM386 will be directed to provide
+EMS memory; otherwise not.
+
+In addition, this entry determines whether CD drivers, if found in the
+user's boot files, will be added to the boot disk:
+
+     CD = yes (or no)
+
+The step-by-step procedure follows:
+
+The procedure reads the user's current configuration.  If he is not
+using a high enough version of DOS or a good enough CPU, it aborts.
+If he does not have enough extended memory to provide the minimum
+amount of EMS, it aborts.  This must include 200K for the game, 200K
+for upper memory blocks, 208K for the observed overhead of
+EMM386.EXE/HIMEM.SYS and 50K for slop.
+
+If he is running 4DOS or other non-DOS command processor, it aborts.
+This is because, under DOS 5.0, the current command processor is
+copied during a FORMAT /S, but under the name COMMAND.COM, even if it
+was originally named something else.  This can confuse a system like
+4DOS, so we just bag it.
+
+The COMSPEC environment variable is used to determine the hard disk in
+which to look for stuff like AUTOEXEC.BAT.  If COMSPEC is missing or
+doesn't include a drive letter, drive C: is assumed.
+
+The user's AUTOEXEC.BAT is read.  If it contains an invocation of a
+file with "MOUSE" in the name, that information is recorded.  If it
+contains an invocation of SHARE, that information is recorded.  If it
+loads MSCDEX, that information is recorded and the MSCDEX parameters
+are parsed to identify the CD drivers used in CONFIG.SYS.  If it
+contains a SET SOUND= or SET BLASTER= command, that information is
+recorded.  If it contains a command to run KEYB, that information is
+recorded.
+
+The user's CONFIG.SYS is read.  If it contains an invocation of a file
+with "MOUSE" in the name, that information is recorded.  Also recorded
+are lines with the following commands:
+
+     //  hard disk drivers:
+     fixt_drv.sys, dmrvr.bin, edvr.sys, sstor.sys, harddriv.sys,
+sswap.com, stacker.com, devswap.com,  sstordrv.sys,
+
+     // sound drivers
+     mvsound.sys, csp.sys
+
+     // CD drivers
+     cdrom.sys, chinon01.sys, chinon02.sys, chinon03.sys, fdcd.sys,
+mdscd_fd.sys, mtmcdd.sys, mtmcds.sys, neccdr.sys,
+     pcds650sm.sys, pcdlat.sys,  sbpcd.sys, sony_cdu.sys,
+sony_pfm.sys, tslcdr.sys,
+
+     // miscellaneous
+     setver.exe
+
+searc
+searched for when the hard disk is searched.  The mouse driver is
+optional.  If the minEMS or both the minDOS=500 and minCPU=386
+resource file entries were found, EMM386.EXE and HIMEM.SYS are
+required.  If they're not found, the process aborts.  For SCI32 games,
+these drivers are not required or used.
+
+The user is prompted to put a blank disk in drive A:.  The process
+checks to make sure the disk is either unformatted, or is a 1.2M,
+1.44M, 720K or 360K floppy disk.  If it can't be determined what size
+the disk is, the Install program asks the user.  If the disk contains
+INSTALL.EXE, he is prompted to replace it with a disk that doesn't.
+
+If any files (including hidden or system files, or directories) are
+found on the floppy disk, a list of them is displayed to the user to
+confirm that he wants to erase them.
+
+The process then runs the DOS FORMAT program.  After this has
+finished, it examines the floppy disk to make sure that it includes
+three and only three files:  COMMAND.COM and two hidden, system,
+readonly files (whose names don't matter).  If not, the format was
+assumed to have been unsuccessful and the process aborts.
+
+The process then creates AUTOEXEC.BAT on the boot disk.  It contains
+
+     @ECHO OFF
+
+     C:
+
+     PATH <the user's path>
+
+     PROMPT <the user's prompt>
+
+     SET COMSPEC= <the user's initial comspec>
+
+     LOADHIGH <mouse driver>  (if the mouse was loaded in the user's
+original AUTOEXEC.BAT or a program that looks like a mouse driver was
+found on his hard disk. If the system doesn't support LOADHIGH or if
+the game is for SCI32, the mouse is loaded low.)
+
+     LOADHIGH MSCDEX <parameters> (if found in user's original
+AUTOEXEC.)
+
+     MSCDEX <parameters>      It was found that if MSCDEX can't be
+loaded high because of insufficient memory, DOS won't load it low as a
+fallback.  Therefore, we have to.
+
+
+read
+read are added.  If 'directory' and 'cmd' entries are found in
+RESOURCE.CFG the process will add commands to change to that directory
+and execute that command.  For example, to have the boot disk go into
+the \SIERRA\KQ6 directory and run KQ6.BAT, include the following lines
+in the RESOURCE.CFG supplied with the game:
+
+     directory = \SIERRA\KQ6
+     cmd = KQ6
+
+Note:  if the user is running INSTALL from his hard disk after a
+previous install and makes a boot disk, the directory entry is not
+used; the current directory is used instead.  This is to facilitate
+things if he copied the game to a different directory after
+installation.
+
+The process then copies HIMEM.SYS and EMM386.SYS (if needed) to the
+boot floppy.  It copies these files instead of just pointing to the
+copies on the hard disk to handle the situation if these files are on
+a compressed volume and can't be accessed until after the disk
+compression software has loaded.
+
+The process then creates CONFIG.SYS on the boot disk.  If the game is
+not for SCI32 and the user's system supports use of the upper memory
+area, it contains
+
+     DEVICE=HIMEM.SYS
+
+     DEVICE=EMM386.EXE RAM <emsMem> '386 only, where emsMem is the
+total amount of extended memory in the user's machine, minus 208K for
+observed EMM386.EXE/HIMEM.SYS overhead, minus 100K for slop.  If the
+user requires EMS and his boot configuration requires loading other
+drivers, such as Stacker or CD-ROM drivers, the parameters "I=C800-
+EFFF M3" are added in order to give him enough high memory area.
+
+     DOS=HIGH  on a '286 with DOS 5.0, or
+
+     DOS=HIGH,UMB on a '386 with DOS 5.0
+
+The following entries are also created:
+
+     FILES=30
+
+     BUFFERS=40
+
+     DEVICEHIGH=<mouse driver> if the mouse driver was found
+
+     LASTDRIVE=x if found in user's original CONFIG.SYS
+
+     DEVICEHIGH=DBLSPACE.SYS /MOVE on DOS 6 systems
+
+Other entries, as noted above, are added for sound drivers or disk
+managers.
+
+Finally, if SHARE was invoked in the user's AUTOEXEC.BAT, he is warned
+to reboot after playing the game (since we don't load SHARE)..
+
+
+Returning to Default Choices
+
+If the user changes any of the choices Install suggested for him when
+the game was first installed, an additional choice will be available:
+"Return to Sierra defaults."  This lets him start over with a clean
+slate.
+
+
+Accepting Installation Choices
+
+After the user chooses "Accept these choices" from the Installation
+Choices screen, he may be shown various information screens, such as a
+warning to turn off NUMLOCK before playing the game.  He can either
+press ENTER at these screens or ESC to go back and change the
+selection.
+
+
+Installing the Game
+
+At this point, the game is actually installed on the user's hard disk
+by executing the installation script in INSTALL.SCR.  This script
+usually asks additional questions of the user depending on the
+individual game, checks the user's disk for sufficient free space,
+creates a subdirectory and copies the game files.  The installation
+floppy disk is not modified.  After the script has completed, the user
+presses a key to exit Install and proceeds to have fun.
+
+
+Installing Without Hardware Autodetection
+
+When the Install program starts, it performs various tests to
+determine the user's hardware configuration.  It is conceivable that
+these tests could hang the user's machine.  In this event, the Install
+program can be started with the -m command line flag by typing
+INSTALL -m at the DOS prompt.  This flag disables autodetection.  The
+user will be presented with a sequence of menus from which to select
+his hardware configuration.
+
+To enable autodetection selectively, follow the -m flag with a number
+specifying the autodetection desired:
+
+     VIDEO       1
+     MUSIC       2
+     VOICE       4
+     JOYSTICK    8
+     KEYBOARD    16
+     COMM        32
+     MOUSE       64
+     MEMORY      128
+
+
+For example, to enable music autodetection only, use INSTALL -m2.  Add
+numbers together to enable more than one autodetection.  For example,
+to enable memory and video autodetection (128 + 1 = 129) use
+INSTALL -m129.  This option is available primarily for debugging
+purposes.
+
+
+Changing Configuration and Updating a Game
+
+If the user needs to change his configuration after installing the
+game, he can run the Install program again from his hard drive.  He
+will not be asked which drive to install to, and his previous choices
+will be displayed for him to change.
+
+In the case of updating a game from floppy, after selecting the drive
+to install to the old configuration will be presented for the user to
+change if necessary.
+
+
+Required Files
+
+A typical game will require many different files, which are used
+during the installation process by INSTALL.SCR.  These will be
+resources, patches, batch files, etc.
+
+The files required by the Install program itself are:
+
+INSTALL.EXE    The program.
+               
+INSTALL.HLP    Besides help and information messages, this file also
+               contains the names of the driver files that are
+               displayed as menu choices.  The order of these entries
+               in the file determines the order of the menu choices.
+               
+INSTALL.TXT    This file contains the rest of the text displayed by
+               the program.  If either this file or INSTALL.HLP is not
+               found on the current drive, the Install program won't
+               be able to locate its text, and an error message will
+               be displayed.
+               
+INSTALL.SCR    This file contains the commands to actually copy a game
+               to a user's disk.  The Install program will run without
+               this file, but there wouldn't be much point.
+               
+The following is information of interest mainly to programmers.
+
+
+Menu Choices
+
+Menus in general are created from the driver files found on the
+installation disk.  If there are no driver files of a given menu's
+type on disk (like CD speech, for example), no menu will be displayed
+and no choice will be recorded in RESOURCE.CFG.  If there is only one
+driver file (e.g. VGA320.DRV for a VGA-only game), the menu won't be
+displayed and that driver will be recorded in RESOURCE.CFG
+automatically.
+
+The order of driver menu choices is determined by the order of the
+corresponding text entries in INSTALL.HLP.
+
+
+Help, Information and Warnings
+
+There can be help and/or information for each menu choice.  A help
+entry is displayed when the user highlights the choice and presses F1.
+
+An information entry is displayed when the user selects a choice by
+pressing ENTER on it.  In general, an information item is provided to
+warn the user of some condition (e.g. to turn off NUMLOCK in order to
+control Ego with the keypad cursor keys).  When the information is
+displayed, the user has the option of pressing ENTER to continue, or
+ESC to go back and change his choice.
+
+If the user doesn't go to any of the individual menus to change the
+default choices, all appropriate information screens will be shown
+when he accepts the choices shown on the Installation Choices menu.
+This makes sure he sees all warnings.
+
+There doesn't have to be help or information entries for all menu
+choices, though naturally help entries are desirable.
+
+
+Input Fields
+
+TSN Install contains some screens that are input fields instead of
+menus.  Install will record the contents of these fields in the
+configuration file entry, rather than the name of a driver file.
+
+
+Viewing README
+
+If a file by the name README or READ.ME is present, the user can view
+it from within the Install program.  The file should be formatted so
+that no lines are longer than 74 characters.  Tabs are not expanded.
+
+
+Text Files
+
+INSTALL.
+INSTALL.TXT contains all the rest of the text displayed by the
+program.  These files have the format
+
+     \\label
+     text
+     \\label
+     text
+     [etc...]
+
+where label is an identifying string, and text is the actual
+information.  Case is not significant in label.  Whitespace after the
+backslashes and after the label is stripped, but whitespace within the
+label is significant.  Text can be as many lines as necessary.  Each
+line can be up to 2000 characters long and will normally be
+wordwrapped if necessary when displayed by the program.  A single line
+can be broken into separate lines if each line ends in a backslash.
+The backslash and newline will be deleted when read.
+
+At startup, Install scans the installation disk for INSTALL.TXT and
+INSTALL.HLP, then for any other .TXT and .HLP files and adds their
+contents to its dictionary of text entries.  An entry for a given
+label overrides a previously defined entry.  Therefore, if you want to
+override an entry without changing the default files, simply include
+another .TXT or .HLP file with the new entries.
+
+The labels for help, information and driver descriptions are of the
+form driver.hlp, driver.inf and driver.drv respectively, where driver
+represents the base name of the associated driver file or choice.  The
+description of the driver used as the text for a menu choice is no
+longer taken from the driver file itself but comes from the text file
+INSTALL.HLP.
+
+
+Configuration File
+
+When the user chooses to accept the configuration on the Installation
+Choices menu, the choices are recorded in the RESOURCE.CFG file.  For
+each item, a line is recorded in this file showing the driver chosen.
+For example, the Video menu will create a line like
+videoDrv = VGA320.DRV.
+
+Three menus act a little differently:  The Joystick menu will record
+either joyDrv = JOYSTICK.DRV or joyDrv = NO.  The Mouse menu will
+record either mouseDrv = STDMOUSE.DRV or mouseDrv = NO.  The Memory
+menu will record either memoryDrv = ARM.DRV or memoryDrv = NO.  Note
+that there are no driver files called STDMOUSE.DRV, ARM.DRV or NO.
+
+
+Forcing Full Install
+
+The Install program only runs the Install script (which does all the
+file copying) if the user is running it from floppy drive A: or B: or
+from a CD drive.  Otherwise, it assumes the user is updating a prior
+installation and simply updates his RESOURCE.CFG.
+
+To force the Install program to do a full install and run the Install
+script, use the -f option on the command line.
+
+
+
+SIP Compression
+
+SIP compression is the scheme by which the install program can utilize
+file compression in order to cut down on the amount of floppy disk
+space needed to install a game.  The files to be compressed can be
+files internal to the install such as install.txt,  as well as other
+files that are eventually copied over to the user's hard disk during
+install  process.
+
+The nice thing about this compression feature is that it is completely
+optional.  Anyone not interested in the benefits of modern data
+compression can operate the  install program in the normal fashion.
+The basis from which  the install can make use of compression is the
+presence of SIP archive files (name.sip).  These SIP files are simple
+archives created by the command-line tool sip.exe,  which uses the
+PKWare data compression library to perform the actual compression.
+More information about the tool "sip.exe" can be obtained from the
+document "sip.doc" available at an  X: near you.
+
+Install recognizes "install.sip" to be the SIP file that contains the
+following
+
+files:
+
+   install.txt
+
+   install.scr
+
+   install.hlp
+
+   readme or read.me
+
+   resource.cfg
+
+If this file is present the install will obtain these files from the
+archive, thus the first three must be present within the archive while
+the last two are optional as the norm.  Another SIP file that can be
+used is "drivers.sip" that contains all of the drivers used by the
+install for detection purposes and  subsequently copied over to the
+hard disk.  The file "sierra.sip" is recognized as well,  for it can
+contain any miscellaneous files like patches or map files that
+eventually get copied over by the install script.
+
+The mere presence of any one of these SIP files will trigger  its use
+by the install program.  For example, if archive "drivers.sip" resides
+on the source disk, the install will process drivers using the
+archive.  If "drivers.sip" is not present, the install will expect the
+driver files to be on the diskette in uncompressed form.  The same
+thing applies for "install.sip".
+
+The install script requires no special commands to copy over files
+included within an SIP file because the Copy command has been modified
+to search the relevant SIP files for the file or files to be copied.
+If a match is found, the file is then automatically extracted to the
+destination disk along with a message
+
+indicating said extraction.  For example, the script command "Copy
+*.bat" would extract all batch files included within any of the
+SIParchives, then any remaining loose batch files would be copied over
+if present.  As of now, there is no SIP support for the operation of
+copying files kept  over several disks.  This operation, if needed,
+will have to use standard uncompressed files.
+
+Since it is the install script's responsibility to copy over all of
+the files normally included within the SIParchives, the re-install
+process has no need for the original SIP files.  The re-install merely
+proceeds with the loose files already present on the hard disk.
+
+The only difference perceived by the user will be that the install's
+initialization before the first screen appears will take a bit longer.
+This will only be a factor during the initial install from floppies.
+As for the game team, the compression process will require a small
+amount of effort to create and maintain the SIP archives, but the less
+cluttered setup disk should prove to be  a welcome addition to any set
+of volumes.
+
+
+Command Script Language
+
+If the user is running the Install program from a floppy drive (A: or
+B:) or a CD drive and the installation script file INSTALL.SCR is
+present, it will be executed.  INSTALL.SCR uses a language very
+similar to MS-DOS Batch, but with enhancements.  Typically, the
+installation script will display messages to the user, get input from
+him, check for sufficient disk space, create a subdirectory and copy
+files.
+
+Three variables are passed to the script by the Install program:
+
+     %1, which is replaced by the destination drive
+     %2, which is replaced by the installation source drive
+     %3, which is replaced by the new contents of RESOURCE.CFG
+     %4, which is replaced by the destination directory
+
+su
+supply it when you use the parameter in the script file.
+
+If the user is installing from floppy disk or CD (as opposed to a
+reinstall from the hard disk in order to change options), it is the
+responsibility of the script file to create RESOURCE.CFG in the
+appropriate directory on the user's hard disk.  It can't simply be
+copied from the floppy disk, since it isn't written there.  The
+following command is necessary to create RESOURCE.CFG
+
+     echo %3>resource.cfg
+
+and should be included in the section of the script file where other
+files are copied from the floppy disk to the user's hard disk.  This
+approach eliminates writing to the floppy disk, which users object to,
+and also conforms to situations where the installation disk can't be
+written to, like CD-ROM products.
+
+
+Sample Installation Script
+
+Following is a sample INSTALL.SCR with annotations.  It is intended
+for tutorial purposes only; the actual script will be dictated by your
+game's needs.
+
+godir %1:%4    CantCreate
+     godir creates the directory specified and changes to it (going to
+     the CantCreate label if the directory can't be created or changed
+     to).
+echo Copying Startup Files ...
+     This section will differ depending on the game, but note the
+     creation of RESOURCE.CFG.
+copy %2:*.drv
+copy %2:*.hlp
+copy %2:*.txt
+     Make sure you copy all the .TXT and .HLP files to the hard disk,
+     or else the user won't be able to run the install program again
+     from there.
+copy %2:version
+copy %2:sierra.exe
+copy %2:resource.000
+copy %2:resource.map
+echo %3 > resource.cfg
+
+copy %2:install.exe
+
+echo Copying Game files...
+     These lines copy the resource files from each disk to the hard
+     disk, checking to see if the file exists in the source floppy
+     drive before prompting the user to insert it.
+exists %2:resource.001 Insert Disk 1 in drive %2:.
+copy %2:resource.001
+exists %2:resource.002 Insert Disk 2 in drive %2:.
+copy %2:resource.002
+exists %2:resource.003 Insert Disk 3 in drive %2:.
+copy %2:resource.003
+exists %2:resource.004 Insert Disk 4 in drive %2:.
+copy %2:resource.004
+exists %2:resource.005 Insert Disk 5 in drive %2:.
+copy %2:resource.005
+
+:exit
+clear
+echo
+echo  To play NOW:
+echo     Type SQ4 [ENTER].
+echo
+echo  To play LATER:
+echo     Type CD %4 and press [ENTER]
+echo     Then type SQ4 and press [ENTER].
+echo
+pause
+end
+
+:CantCreate
+alert Unable to create directory %1:\sierra\sq4
+end
+
+
+
+Script Command Reference
+
+The commands available in this language are:
+
+
+ALERT message
+
+     Opens an alert window, displays message, and allows the user to
+     press ENTER to continue, or ESC to exit Install.
+     
+
+CLEAR
+CLS
+
+     Clears the message window.
+     
+
+COPY sourceSpec [destSpec] [/q] [/s]
+
+     m
+     message while the file is being copied.
+     
+
+COPY destFileName + sourceFileName
+
+     This form allows concatenation of one file to another.  The
+     syntax is based on the DOS syntax for the same action.
+     destFileName is created if it doesn't exist, and sourceFileName
+     is appended to it.  Wildcards are not permitted.
+     
+
+DEL fileSpec
+
+     Deletes a file or group of files.  Wildcards are permitted.
+     
+
+ECHO text [> or >> file]
+
+     With no redirection (> or >>) this command displays text to the
+     user.  The redirection symbols allow writing or appending text to
+     a file.  This is needed to create the batch file that runs the
+     game, since this batch file should include a command to change to
+     the correct drive.
+     
+
+END
+
+     Ends the script.
+     
+
+EXISTS fileName alertMessage
+
+     If filename doesn't exist, does an ALERT with alertMessage,
+     allowing the user to either put in the correct disk or exit
+     Install.
+     
+
+GODIR path label
+
+     Attempts to change directory to path, creating path if necessary.
+     If unsuccessful, goes to label.
+     
+
+GOTO label
+
+     Considered harmful (just kidding).
+     
+
+IF [NOT] ERRORLEVEL value command
+
+     Compares the number value to the return value of the last program
+     executed.  If the return value was greater than or equal to
+     value, command is executed.  NOT reverses this logic.  command
+     can be any valid script command.
+     
+
+IF [NOT] EXIST fileSpec command
+
+     Determines if fileSpec (which can be a wildcard) exists and
+     executes command if it does.  NOT reverses this logic.  command
+     can be any valid script command.
+     
+
+PAUSE [message]
+
+     If message is not specified, Press a key to continue... is
+     displayed.
+     
+
+PICK letters choice1 choice2 choice3 choice4
+
+     Gets a keypress from the user, and branches to the appropriate
+     choice.  For example, if the command was
+          PICK abcd aChoice bChoice cChoice dChoice
+     and the user typed a C, the script would goto the label cChoice.
+     Case is not significant for keypresses.
+     
+
+SPACE drive kilobytes label
+
+     Tests that drive has kilobytes free; if not, goes to label.  This
+     command is not  supported if a "space=x" entry is included in
+     RESOURCE.CFG (where 'x' represents the disk space required by the
+     game in K) as the Install program itself will test disk space
+     requirements.
+     
+
+TESTDIR path
+
+     Tests to see if path contains any files (like those from a
+     previous install).  If so, confirms that user wants to continue
+     installation.
+     
+
+Labels
+
+The GODIR, GOTO, PICK, and SPACE commands can cause execution to
+branch to a label.  As in DOS Batch, a label is a word on a line by
+itself with a colon in front of it.
+
+
+Running External Programs
+
+The installation script can run external programs by simply using its
+name, followed by any parameters (including %1, %2 or %3 that Install
+provides).  The program name does not have to include an extension,
+and if no path is included in the name, the PATH environment variable
+will be used to find the program.
+
+If the program is a .COM or .EXE file, it is run directly by the
+Install program and ERRORLEVEL will be set (see above under the IF
+command to see how ERRORLEVEL is used).  If the program can't be found
+(for example, if the command is a .BAT file or internal DOS command),
+COMMAND.COM is called to attempt to run it and ERRORLEVEL will be set
+to -1.  Because of this, there is no error message if a program can't
+be found, since COMMAND.COM doesn't tell us.
+
+If the output of a program is redirected with > or >>, the screen will
+not be cleared.
+
+
+Default Configuration File
+
+A default configuration file should be included on the installation
+disk.  This file can include default entries, no-default entries, a
+directory entry, a floppy entry and/or other game-specific constant
+information.
+
+There can be constant information in the default configuration file
+that the Install program doesn't change, use or even know about.  One
+such entry is minHunk = 1000k (e.g.).  Install will simply add any
+entries it doesn't understand to the installed configuration file.
+Install also adds any default, no-default and directory entries to the
+installed configuration file.
+
+Much of the following applies only to TSN.
+
+For most of the choices in the Install program, autodetection provides
+appropriate defaults.  But for TSN, e.g., the choice of a default
+modem prefix string can be specified by a line in the default
+configuration file of the form default prefix = ATZ~!.  ATZ~! will be
+the default prefix the user sees when he first installs TSN.  He can
+also revert to that prefix by selecting "Return to Sierra defaults"
+from the Installation Choices screen.  Default entries are not
+currently needed for other Sierra games.
+
+It can sometimes be necessary to require the user to make a decision,
+rather than simply giving him a default choice.  This can be effected
+by including a line in the default configuration file of the form
+default touchtone = none (for the touchtone choice).  This ensures
+that the touchtone choice menu will be displayed to the user when he
+runs the Install program.  Anytime it is necessary to force the user
+to make an explicit choice a no-default entry should be included in
+the default configuration file.
+
+d
+desirable to show the user his previous choices.  To do this, a line
+of the form directory = \tsn should be included in the default
+configuration file.  This would instruct the Install program to look
+in the \tsn directory for a previous configuration file.
+
+Normally, Sierra games can't be installed to a floppy drive, and the
+Install program won't allow drives A: or B: to be selected as the
+destination of the install.  However, including the line floppy = yes
+in the default configuration file will allow installation to a floppy.
+If the destination floppy drive is the same as the installation drive,
+the installation script won't be executed; only the configuration file
+will be written.
+
+
+Password Screen (TSN only)
+
+A file called PASS_SET.DTA is maintained.  It can contain three types
+of password information:  1) "AB" followed by a password, if the user
+chooses automatic password entry; 2) "BC" followed by padding if the
+user chooses to enter his password each time and hasn't run the game
+yet; or 3) "DF" followed by padding if the user chooses to enter each
+time and has run the game.  The password is from 6 to ten uppercase
+characters or digits and is encrypted.  The file is padded out to
+twelve characters.
+
+The directory entry in the configuration file is used to find the
+password file on an update.  Otherwise, it is looked for in the
+current directory.  The file is always written back out by the program
+(not by the script).
+
+
+Changes History
+
+3.670  11/21/93  Detect SADL.DRV (Ed Critchlow).
+                 
+3.661  11/16/93  Copy over CSP.SYS.  Don't load MSCDEX twice unless
+                 one of them is loaded high.
+                 
+3.660  11/14/93  Boot disk maker:  SCI32 protected mode boot disk
+                 (doesn't load things high).  Copies SET BLASTER=
+                 line.  Doesn't abort if can't find DBLSPACE.DRV.
+                 Doesn't use "I=C800-EFFF M3" option to EMM386.
+                 Prompt puts our text on line above prompt.
+                 Other changes:  Fixed SPACE command in script
+                 language to treat argument as unsigned.  Added
+                 "mode=" line to RESOURCE.CFG to use for real mode
+                 (SCI16) programs (for bootdisk maker's benefit).
+                 Better handling of nonexistent or empty drives in
+                 drive selection list.
+                 
+3.648   5/21/93  Boot disk maker:  Make boot disk AUTOEXEC.BAT go to
+                 install destination hard disk, instead of COMSPEC
+                 disk.  Pause after running FORMAT so user can view
+                 FORMAT error messages, if any.
+                 
+3.647   5/13/93  Boot disk maker: fixed FORMAT command invocation for
+                 DOS 3.3.
+                 
+3.645-6 5/10/93  Boot disk maker:  load mouse driver first.
+                 
+3.644   4/26/93  Handle checking for disk compression on a write-
+                 protected drive.  If no space on drive to test, or if
+                 file error, report no compression.  Boot disk maker:
+                 Support DOS 6's DoubleSpace disk compression.  Load
+                 mouse driver last.  Fixed bug if MSCDEX is loaded but
+                 no CD driver is.
+                 
+3.630   3/25/93  Detect Aria sound driver (Ed Critchlow).
+                 
+3.620    3/8/93  Source directory wasn't being set properly.  Allow
+                 SPACE script command if RESOURCE.CFG doesn't contain
+                 a "space=" entry.  "directory=" entry was being
+                 written twice to RESOURCE.CFG.
+                 
+3.612   2/25/93  Boot disk maker allows changing to a directory on
+                 boot even if a command isn't specified, and vice
+                 versa.
+                 
+3.611   2/23/93  Fixed bug in user defined directory screen where the
+                 prompt was not adjusted when the destination drive
+                 has been changed.
+                 
+3.610   2/22/93  Drive selection screen.
+                 
+3.600   2/16/93  Added the ability for the install to operating using
+                 files compressed using the SIP archive format.  The
+                 install can also work as normal without any
+                 compression at all.
+                 
+3.590    2/5/93  If MSCDEX specifies more than one CD drive, both will
+                 be looked for in the user's CONFIG.SYS and used in
+                 the boot disk.  If KEYB is used in user's
+                 AUTOEXEC.BAT, it will be used in the boot disk.
+                 Fixed bug where 64K EMS was eaten each time program
+                 was run.
+                 
+3.580   1/12/93  The prompt for the user chosen directory now includes
+                 the slash built into the prompt.  The user no longer
+                 has to provide it.
+                 
+di
+                 disk can be formatted in high density drive.  EMM386
+                 and HIMEM.SYS now copied to boot disk for
+                 compatibility with compressed hard drives.   CD
+                 drivers are not loaded unless 'CD=yes' appears in
+                 RESOURCE.CFG.  If the game does not require EMS
+                 (indicated by lack of 'minEMS=' line in RESOURCE.CFG)
+                 the boot disk maker won't direct EMM386 to provide
+                 EMS. If the game requires EMS and a CD driver or hard
+                 disk manager is loading (requiring more high memory),
+                 EMM386  will be run with the I=C800-EFFF M3 option.
+                 Lines in AUTOEXEC preceded with '@' are now processed
+                 correctly.  MSCDEX, if found, is loaded twice:  once
+                 high and once low.  This is because if it fails to
+                 load high because of insufficient memory, it won't
+                 load low unless we explicitly tell it to.  Program
+                 now searches entire floppy disk to make sure the disk
+                 with Install is or isn't in the drive.  After boot
+                 disk is made, changes back to install directory on
+                 floppy.  This allows the boot disk maker to work
+                 properly if Install is                 not run from
+                 the root directory of the floppy.
+                 
+3.570  12/17/92  Return an errorlevel from external programs even if
+                 output is redirected (we handle all redirection of
+                 output now).  Made tab character a delimiter when
+                 parsing tokens from script.
+                 
+3.568  11/24/92  Added support for midnone.drv.
+                 
+3.567   10/1/92  Install will now detect if you are on a CD drive.
+                 Added support for the Microsoft Windows sound card.
+                 
+3.566   9/29/92  Updated copyright notice.
+                 
+3.565   9/27/92  Fixed a bug so disk errors like disengaging a floppy
+                 too early will be correctly reported.
+                 
+3.564   9/15/92  For the moment, the install will not append the 220
+                 usually included on the config file line to indicate
+                 the audio port.  A more complete solution is
+                 forthcoming.
+                 
+3.563    9/2/92  Added the /s flag to the copy command. This performs
+                 a copy with echoing to the screen.  Fixed the 'if
+                 exist' command to now work properly.
+                 
+3.562   7/23/92  Program now allows user to pick the directory where
+                 game files will be placed.  Also added support for
+                 the Sound Blaster Pro driver.
+                 
+3.561   6/15/92  After creating boot disk, prompt to replace boot disk
+                 with install disk after prompting to label boot disk.
+                 
+3.560   6/12/92  After making a boot disk, program asks user to put
+                 Install disk back in.  Corrected Gameblaster and
+                 SoundBlaster number of voices information in
+                 INSTALL.HLP.  Changed help and menu text for EGA640
+                 driver so that it doesn't say RGB monitors are
+                 supported (Dan Foy).
+                 
+3.551   6/10/92  Added several more device drivers to be copied when
+                 making a boot disk.
+                 
+3.550a   6/8/92  (TSN) TSN.CFG wasn't being written on a reinstall.
+                 
+3.550   5/27/92  Support more drivers when creating boot disk.
+                 
+3.540   5/26/92  Making a boot disk on a '286 with DOS 5.0 will load
+                 DOS high.
+                 
+3.531   5/15/92  Boot disk making function can start game if directory
+                 and startup command provided in RESOURCE.CFG.
+                 (Version number wasn't incremented.)
+                 
+
+
+3.531a  5/14/92  (TSN) Always write out the password file, instead of
+                 having the script do it on an initial install.
+                 
+3.531   5/13/92  Fixed bug in 'xxx = none' which made program think
+                 'no' == 'none'.
+                 
+3.530    5/4/92  Added support for 'xxx = none' resource file entry so
+                 Dynamix can avoid showing the mouse and memory menus.
+                 
+3.521   4/30/92  Made so "Make boot disk" is never default choice.
+                 
+3.520   4/27/92  Added 'if exist'.
+                 
+3.511   4/24/92  Fixed another bug where previous install's config
+                 files weren't read properly.
+                 
+3.510   4/24/92  Added concatenation capability to copy command.
+                 
+3.501   4/24/92  Fixed bug where previous install's config files
+                 weren't read properly.
+                 
+3.500   4/22/92  Added boot disk making function for all versions of
+                 DOS and all CPUs.
+                 
+3.411a  4/21/92  Added password screens for TSN.
+                 
+dis
+                 disk making module.  Added option in code not to
+                 allow making boot disk, for TSN.
+                 
+3.410   3/20/92  Added DOS 5.0, '386 boot disk making function.  Fixed
+                 some bugs related to faulty optimization in Borland
+                 C++ 3.0.
+                 
+3.400    3/5/92  Converted to Borland C++ 3.0.  Fixed bug where
+                 shelling to a program in the install script cleared
+                 the screen regardless of presence of indirection.
+                 
+3.396c  1/30/92  (TSN only)  Forwent secondary phone number for this
+                 version.
+                 
+3.396b  1/28/92  (TSN only)  Added secondary phone number and mailbox
+                 number screens.
+                 
+3.396   1/13/92  Fixed bug where shelling to a program in the install
+                 script truncated the command line after the first
+                 argument.
+                 
+3.395a 12/19/91  (TSN only)  Made modem setup string input field wider
+                 (from 35 to 55 chars).
+                 
+3.395  11/21/91  If installing on a network, limit max drive to
+                 install to to Z:.
+                 
+3.394  11/14/91  Improved detection of Sound Blaster on fast machines
+                 (Chris Smith).
+                 
+3.393   11/5/91  Fixed bug when a version number was long, like
+                 3.393a.  Changed title of TSN phone list window and
+                 allowed wider entries.
+                 
+3.392   11/1/91  Added /q flag to copy command.
+                 
+3.391  10/14/91  Fixed compiler option that was incompatible with
+                 library.
+                 
+3.39    10/8/91  Minor internal changes to support The Laffer
+                 Utilities.  Integrated with library used in other
+                 programs (like View Editor).
+                 
+3.381   10/1/91  (TSN only) Added 9600 baud menu choice.
+                 
+3.38    9/26/91  Added screen at end of install telling user to send
+                 in his warranty card.
+                 
+v
+                 version number.  Thousandths will be used for bug
+                 fixes; hundredths for small improvements; tenths for
+                 major improvements; and unit for rewrites.
+                 
+3.37     9/6/91  Fixed YATB (Yet Another Tandy Bug) where the Tandy
+                 would hang while detecting extended memory if there
+                 is none.
+                 
+                 Made right window shadow narrower if in greater than
+                 25-line mode to match size of bottom shadow.
+                 
+                 If an external command is redirected, don't clear
+                 screen.
+                 
+3.36     9/4/91  Help for TSN phone number views a file containing
+                 phone numbers.
+                 
+3.35    8/29/91  Wasn't getting text for joystick menu label from
+                 INSTALL.HLP.
+                 
+3.34    8/28/91  Fixed video display routines to be compatible with
+                 UltraVision.
+                 
+3.33    8/20/91  Clear screen on abort from critical error.
+                 
+3.32    8/19/91  Added ability to execute external programs and test
+                 their return value with new IF ERRORLEVEL command.
+                 
+                 Fixed bug where port wasn't appended to sound and
+                 audio configuration lines.
+                 
+3.31     8/2/91  Made command log window larger.
+                 
+3.30    7/31/91  Major rewrite of display and window handling
+                 routines.  The display speed is considerably faster.
+                 A few windows use different colors.  Converted to
+                 large memory model, which has made the program
+                 bigger.
+                 
+3.22    7/17/91  Improved error message when a text entry isn't found.
+                 
+3.21a   7/17/91  (TSN only) New comm port detection.
+                 
+3.21    7/16/91  Added option to view README file.
+                 
+'2
+                 '286 with no extended memory allows user to "use
+                 extra memory" (even though the game would not
+                 actually try to use it).
+                 
+3.20    7/15/91  Converted to acompact model to make more memory
+                 available.  This increased the size of the program by
+                 about 11,500 bytes.
+                 
+3.15             Fixed bug where a Tandy with no extended memory could
+                 report a bogus amount.
+                 
+3.14             Fixed bug where a file created by redirection could
+                 be read-only.
+                 
+3.13             Fixed some bugs having to do with long text messages
+                 (observed when testing Spanish language version).
+                 Improved detection of full target disk.
+                 
+3.12             Made the order of driver menu choices dependent on
+                 the order of the associated entries in INSTALL.HLP.
+                 
+                 Added autodetection for audio (Chris Smith).
+                 
+3.11             Added floppy = yes entry to default config file.
+                 
+3.10             Moved all text into text file(s).
+                 
+3.00             Show menu of default choices.  Read existing config
+                 file.
+                 
+
+

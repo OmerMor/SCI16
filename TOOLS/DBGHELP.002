@@ -1,0 +1,18 @@
+i - inspect selector
+e - edit heap address or selector
+t - trace heap address or selector
+T - trace hunk address
+
+c - display collection
+
+left, right arrow
+  - move address by 2 bytes
+up, down arrow
+  - move address by 16 bytes
+pageup, pagedown
+  - move address by 64 bytes
+
+[ - move to next in doubly-
+    linked list
+] - move to previous in
+    doubly-linked list

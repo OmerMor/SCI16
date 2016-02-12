@@ -1,0 +1,7 @@
+VOL1:\PUBLIC\TOOLS\DRIVERS\SOLONLY (X:DRIVERS\SOLONLY)
+------------------------------------------------------
+
+The drivers in this directory are for use by game developers only.  Those
+suffixed with an 'x' indicate that the driver will accept patches.
+
+None of these drivers should be shipped with a game.

@@ -1,0 +1,1097 @@
+                M E S S A G E   E D I T O R   4 . 3 2 1
+                                   
+                              Mark Wilden
+                         Sierra On-Line, Inc.
+                             15 March 1993
+                                   
+                                   
+                                   
+                                   
+All text in Sierra games is stored in message files.  These files can
+be created and edited using the Message Editor program, ME.  This
+document describes the use of the Message Editor.  ME also contains a
+full context-sensitive, hypertext-like help system, accessible by
+pressing F1 at any time.
+
+At the end of this document there is a changes history, which presents
+a log of changes made to the program by version number and date.  To
+find out what's new with the Message Editor, look at the most current
+version of this document, which is stored on X: as ME.DOC.
+
+
+Message Concepts
+
+Each message in a Sierra game is identified by noun, verb, case and
+sequence number.  In general, the noun and verb is used to tie the
+message to a player action like clicking the eye cursor on the rock,
+which would result in displaying the ROCK LOOK message.   This message
+is displayed without the application programmer having to specially
+code it.  When the player clicks on the rock, the system sees if a
+ROCK LOOK message has been defined and displays it.
+
+A case is used when you want to specify different messages for the
+same player action, depending on the current state of the game.  For
+example, you may want to display different messages depending on
+whether the player chose the "blind from birth" option.  Then you'd
+have two cases:  BLIND and SIGHTED.  There would be one ROCK LOOK
+BLIND message and one ROCK LOOK SIGHTED message.
+
+Often there will be several messages displayed for a given noun-verb-
+case, possibly spoken by different talkers in a conversation.  In that
+event, you'll assign the same noun, verb and case to each of these
+messages, but give them different sequence numbers.  For instance, if
+looking at the rock while blind led to a conversation between Graham
+and Cedric, there would be messages defined for ROCK LOOK BLIND 1,
+where the talker would be GRAHAM, and for ROCK LOOK BLIND 2, where the
+talker would be CEDRIC.  Each message in a file must have a unique
+noun-verb-case-sequence number.
+
+Nouns, verbs and cases can be also be used as completely arbitrary
+identifiers that simply differentiate one message or group of messages
+from another.  For example, you can write a message to be displayed
+when the player first enters a room and identify it  by the noun
+"ENTER_ROOM".  The verb and case are optional in this case and default
+to "ALL", a special value for verbs and cases that matches any verb or
+case.
+
+In order to avoid duplication of messages, it is possible to define
+one message in terms of other messages.  You can, for example,
+designate that 'EXAMINE ROCK' should display the same message as 'LOOK
+ROCK'.  See the Reference Fields section below for details.
+
+                                   
+                                   
+                                   
+                       USING THE MESSAGE EDITOR
+                                   
+                                   
+
+Starting ME
+
+Start ME by typing ME [-h] [-t[file-ext]] [-wwhere-file-
+name][<filename>] at the DOS command line (brackets enclose optional
+items).  <filename> is replaced with the name of the message file you
+want to work on (the .MSG extension may be omitted).  The -h option
+puts the screen in 50-line mode, otherwise the currect screen mode is
+used.  The -t option is for translating mode.  file-ext is the
+extension to use for the translation file.  The -w option lets you
+specify the name of your 'where' file if it isn't in the current
+directory.
+
+To exit the program, type Alt+X.
+
+
+The ME Screen
+
+At the top of the screen is the menu bar.  To execute menu commands
+with the mouse, click on a menu item to open the menu box, then drag
+the selection bar down to the desired item and release the mouse
+button.  To use the keyboard, press Alt plus the highlighted letter of
+the desired menu item to open the menu box, then either use the arrow
+keys to move the selection bar to the desired item and press Enter, or
+type the highlighted letter of the desired menu item.  Note that many
+menu items have associated accelerator keys, listed beside each item
+in the menu box.  For instance, to open a file you can simply press
+F3.
+
+At the bottom of the screen is the status line.  This contains
+frequently used commands.  To execute a status bar command with the
+mouse, just click on it.  To execute a command with the keyboard, type
+the highlighted key beside the command.
+
+At one time or another some commands in menus and on the status line
+are disabled and displayed in a dim color (on a color monitor).  This
+indicates that the commands are not applicable at the current time.
+
+Between the menu bar and the status line is the message list, which
+you can scroll up and down with the mouse and the arrow keys.  Each
+line of the message list shows the noun, verb, case, sequence number,
+talker and message text.  Most of the time the text is truncated to
+fit on the screen.
+
+
+Adding or Changing a Message
+
+To add a message, use the Edit|Add menu choice, or press Ins.  The
+noun, verb, case and sequence number fields will default to adding the
+new message to the end of the current sequence.  To insert a message
+in the middle of a sequence, use the Edit|Insert in sequence command,
+or press Ctrl+I.  The new message will be inserted before the current
+message.  To change a message, position the selection bar on the
+message you want to change using the arrow keys or the mouse, then use
+the Edit|Change menu choice or just press Enter.
+
+The message dialog box will open, displaying the following fields:
+
+Noun            This field must be filled in for all messages.  It can
+                be up to 15 characters long.  You can have up to 255
+                different nouns per file.
+                
+Verb            This field may be left blank, which is equivalent to
+                making it "All".  It can also be up to 15 characters.
+                You can have up to 255 different verbs per game.
+                
+Case            You can leave this field blank too.  When you go to
+                another field, the case comment beneath it will be
+                filled in.  It can be up to 15 characters long.  You
+                can have up to 255 different cases per file.
+                
+Case comment    This field lets you describe the case in more detail.
+                If you've already defined a comment for this case, it
+                will be filled in automatically.  If you change the
+                comment, the change will be reflected in other
+                messages that use this case.  You can't enter
+                carriage returns in this field.  It can be up to 1000
+                characters long.
+                
+Sequence number If you need a sequence of messages for a given noun-
+                verb-case combination, number each of them with a
+                different sequence number.  There can be only one
+                message in a file with a given noun-verb-case-
+                sequence number.  The maximum number is 35.
+                
+Talker          You must always fill in this field.  The maximum
+                length is 10.  You can have up to 255 talkers per
+                game.
+                
+Message text    This field holds the actual message that will appear
+                in the game.  It can be up to 2000 characters long.
+                You can indicate stage directions inside the message
+                text by using all caps inside parentheses (LIKE
+                THIS).  Stage directions will not be printed to the
+                screen when the game is played, but will print in the
+                script for audio actors.
+                
+Comment         Enter notes to programmers or to yourself here.  The
+                maximum length is 2000 characters.
+                
+Reference noun  Noun of the referenced message.  See the Reference
+                Fields section below for details.
+                
+Reference verb  Verb of the referenced message.
+                
+Reference case  Case of the referenced message.
+                
+
+Deleting a Message
+
+To delete a message, use the Edit|Cut command (or press Shift+Del) or
+the Edit|Clear command (or press Del).  Edit|Cut saves the message in
+the scrap; Edit|Clear does not, and therefore asks you to confirm the
+deletion.
+
+If deleting the message creates a gap in a sequence, you will be asked
+if you want to renumber the sequence to close up the gap.
+
+
+Copying and Pasting Messages
+
+You can copy messages into the scrap then paste them back into the
+file.  Cutting a message also puts it in the scrap.  Pasting a message
+inserts it into the current sequence.  You can also paste add, which
+adds the message in the scrap to the end of the current sequence.
+
+
+Key Fields
+
+The noun, verb, case and talker fields are key fields; they reference
+information in other files.  Each of these fields has an arrow icon to
+its right.  This means that you can press Down Arrow to see a list of all
+the keys for that field.  You can use the cursor keys to scroll
+through the list or you can type the first letter or letters to find a
+specific key.  When you've found the key you want, press Enter to
+insert it in the input field.  Pressing Esc puts the list away and
+allows you to enter the key manually.
+
+If the key you enter doesn't already exist, you will be asked if you
+want to add it.  Keys  are converted to uppercase.  The first
+character must be a letter and the following characters must be
+letters, numbers, underscores ("_") or other characters acceptable to
+the SCI language.  Spaces are not allowed in keys.
+
+Keys must be distinct between nouns, verbs and cases.  For instance,
+you can't use ROCK for both a noun and a verb (as you might want to if
+it were an inventory item).  Use another name, like ROCK_I, for the
+verb.
+
+See below under "User Interface" for complete details on using dialog
+boxes.
+
+
+Reference Fields
+
+Reference fields let you define a message to be the same as another
+message, without duplicating its text.  This has advantages for the
+game's memory requirements and for recording CD-audio speech.
+
+To point a message to another message, enter the referenced message's
+noun, verb and case in the appropriate reference fields.  The message
+text will change to the referenced message's text, prefixed with an
+'R'.  The message text may also display "Not found" if the reference
+you entered was not found, or "Endless loop" if the reference points
+back to the original message.  A referenced message may itself
+reference another message (to a maximum depth of 5 references).
+
+Messages reference sequences, not individual messages.  You can only
+reference the start of a sequence of messages (that's why you don't
+specify a reference sequence number:  it's assumed to be 1).  If there
+is a sequence of messages with the reference noun, verb and case, they
+are all considered to be included when the referring message is played
+back.  For this reason, you can't refer to a message with the same
+noun, verb and case.
+
+The "Go to ref" button at the bottom right corner of the dialog box
+takes you directly to the referenced message, so that you can change
+it.
+
+To break a reference, simply delete the reference fields (use ^Y to
+delete each field).  The referenced text will remain in the text
+field, without the prefixed 'R'.
+
+You can't delete a referenced message, or change its noun, verb or
+case, since that would leave the referencing message pointing to a
+missing message.
+
+
+Playing a Message
+
+You can play a message's audio either from the message list or from
+the dialog box.
+
+To play a message from the message list, choose the Audio Play command
+either by selecting from the Audio menu, pressing the Ctrl+P hotkey,
+or by clicking on the entry in the status line.   To play it from the
+dialog box, click on the Play button, or press Alt+Y.
+
+If the audio driver specified in the 'where' file can be correctly
+initialized, and if the audio file can be found (possibly using the
+search path specified in the 'where' file), the audio will play.  You
+can press a key or click the mouse to cancel.
+
+To play the current message file's audios continuously, select the
+Play Rest command from the Audio menu or press the Ctrl+A hotkey.  The
+messages in the file will be played, beginning with the current
+message.
+
+To display the audio file names in the message list, choose the Toggle
+Audio File Names menu choice from the Audio menu.  The audio file name
+of the current message is always displayed in the dialog box.
+
+
+Finishing with the Dialog Box
+
+When you have finished adding or changing a message, press the OK
+button by clicking on it with the mouse, or use the Tab key to make
+the button current and press Enter, or press the OK button's
+accelerator key, Alt+K.  You can cancel your changes by pressing Esc
+or by clicking on the Cancel button.  If you are adding, the dialog
+box will reappear for you to add another message.  When you're
+finished adding, just press Esc.
+
+When editing you can accept your changes and move to the next or
+previous message by pressing the appropriate button.
+
+
+Finishing with a File
+
+After you have finished with a file, you can save it and edit another
+file, or exit the program.  To save the file, press F2 or use the File
+menu item and choose Save.  To edit another file, press F3 or use the
+File|Load menu command to choose from a list of files.  To exit the
+program, press Alt+X or choose the File|Quit command.  If you haven't
+saved your changes, you will be asked if you want to.
+
+Take advantage of the help system if you have any questions or
+problems with the Message Editor.
+
+                                   
+                                   
+                                   
+                            USER INTERFACE
+                                   
+                                   
+
+Menus
+
+Menu commands can be accessed via the keyboard or the mouse.  To use
+the keyboard, press Alt plus the highlighted letter of the desired
+menu entry.  For example, to access the File menu, press Alt+F.  Once
+the menu is open, you can press the highlighted letter of the
+selection you want.  Alternately, you can use the arrow keys to
+highlight the selection and press Enter.  This has the advantage of
+letting you see a brief description of what each item does in the
+status line.  You can also press F1 to get help for the highlighted
+item, as you can at any other time in the program.
+
+To use the mouse, simply click on the menu you want, drag it down to
+the desired item and release the mouse button.
+
+
+The Status Line
+
+The status line generally shows some of the more common commands that
+are available, together with the hotkeys that invoke them.  You can
+execute the command either by pressing the hotkey or by clicking on
+the status line with the mouse.
+
+At other times, the status line will display a brief help message
+indicating what you should do.
+
+If a critical error occurs (like trying to print when you're not
+connected to a printer), an abort/retry prompt will appear in the
+status line.
+
+The status line always shows the amount of free memory available to
+the program in the lower right corner.
+
+
+Windows
+
+There are several kinds of windows used in this program.  Depending on
+the window, you can perform the following actions:
+
+Most windows can be moved around the screen by dragging the title bar.
+This can be useful if a window is obscuring information beneath it.
+
+Most windows also have a close box in the top left corner.  Clicking
+on this closes the window and is usually equivalent to pressing Esc.
+
+List box and help windows have scroll bars you can use to navigate.
+
+Help windows have the ability to be resized.  You can zoom the window
+to fill the screen by clicking on the maximize icon in the top right
+corner.  Clicking it again, when the icon has changed to a double-
+headed arrow, restores the window to its former size.  Help windows
+can also be resized by dragging the resize corner, at the lower right
+corner of the window.
+
+
+Dialog Boxes
+
+Much of the time you enter information, you will be using a dialog
+box.  Dialog boxes are windows that can contain input fields, memo
+fields, checkboxes and radio buttons, and buttons (see below for
+descriptions of each of these items).
+
+Most fields and other parts of the dialog have hotkeys--indicated by
+letters in a contrasting color.  You can quickly move to or select a
+given field by pressing Alt plus the appropriate letter.  You can also
+use the Tab and Shift+Tab keys to move to the next or previous dialog
+item.  You can also move to a dialog item simply by clicking on it
+with the mouse.
+
+If the dialog box is hiding part of the screen that you need to see,
+you can move it out of the way by dragging the title bar with the
+mouse.
+
+After you have finished entering the information requested by the
+dialog box, you can press Enter to accept it or Esc to cancel.  You
+can use the mouse to accept the dialog by clicking on the OK button.
+You can cancel by clicking on the Cancel button or on the close box at
+the top left of the window.
+
+
+Input Fields
+
+You use input fields to enter text.  (For multi-line memo fields, such
+as the Message field see "Memo Fields" below).  Use the arrow keys to
+move around inside an input field.  Pressing Home takes you to the
+beginning of the field and pressing End takes you to the end.  Del
+deletes the current character.  Backspace deletes the previous
+character.  Ctrl+Y deletes the entire field.
+
+If the text is highlighted, the next letter you type will replace it.
+Press End to unhighlight it to add characters to the end.  If the text
+is too long to fit, the field will scroll horizontally.
+
+
+Combo Fields
+
+Some input fields have an arrow icon to their right.  This means that
+you can press Down Arrow (or click on the arrow with the mouse) to see
+a list of all the choices for that field.  You can use the cursor keys
+to scroll through the list or you can type the first letter or letters
+to find a specific key.  When you've found the key you want, press
+Enter to insert it in the input field.  Pressing Esc puts the list
+away and allows you to enter the key manually.  You can also enter a
+new value in the field and, after you've confirmed you want to add it,
+it will appear in the combo list the next time you bring it down.
+
+
+Memo Fields
+
+A memo field (like the case comment, text or comment field) is a very
+simple wordwrapping word processor with facilities for inserting and
+changing text. Type the text without entering carriage returns unless
+you want them to appear in the actual message.  These "hard" carriage
+returns are indicated with a paragraph symbol.  Hard carriage returns
+are not permitted in case comment fields due to the way these fields
+are stored.
+
+You can use the mouse and the cursor keys to position the cursor.  By
+dragging with the mouse or by pressing cursor keys while holding down
+the Shift key, you can select blocks of text to delete.  Ctrl+Y
+deletes an entire line.
+
+
+Buttons
+
+Buttons are generally used to do things like accepting or canceling a
+dialog box.  To invoke a button, use the Tab or Shift+Tab key to move
+to it and press Enter.  You can also click on it with the mouse.  Most
+buttons have highlighted letters which you can use to invoke them by
+pressing Alt plus the letter.  One button that has no highlighted
+letter is the Cancel button, which you can invoke by pressing Esc.
+
+In some dialog boxes there is a default button (usually the OK
+button), whose text is displayed in a different color.  This button
+can be invoked by pressing Enter even if the cursor is in a different
+part of the dialog box.  For example, pressing Enter when the cursor
+is in the noun field of the messages dialog box is the same thing as
+pressing the OK button.  This technique doesn't work when you're in a
+memo field, where pressing Enter inserts a carriage return into the
+field.
+
+
+Checkboxes and Radio Buttons
+
+Checkboxes allow you to select one or more choices from a list of
+possibilities.  A checkbox field is surrounded by square brackets.  If
+it is selected, an X appears in it.  Radio buttons allow only one
+selection from a list of possibilities, like the buttons on an old-
+fashioned car radio.  Radio buttons are surrounded by parentheses.
+The selected choice has a round bullet inside.
+
+You select a checkbox or a radio button with the mouse by clicking on
+the choice you want.  To use the keyboard, press the highlighted
+letter corresponding to your choice.
+
+
+List boxes
+
+The message, nouns, verbs, and cases lists and the lists in file
+selectors are all list boxes.
+
+To move around in a list box using the keyboard, use the cursor keys
+to move the highlight.  The Home and End keys take you to the top or
+bottom of the currently displayed page.  Ctrl+PgUp and Ctrl+PgDn take
+you to the beginning or end of the list.
+
+You can also navigate by typing in one or more letters.  For example,
+if you type 'a', the first item that begins with 'a' will be selected.
+If you then type 'b' the first item that begins with 'ab' will be
+selected.  The cursor indicates the number of matched characters.  You
+can use Backspace to delete matched characters.
+
+To use the mouse, click on the scroll bar.
+
+
+Scroll bars
+
+Scroll bars--vertical and horizontal--can be used in several windows
+to navigate with the mouse.
+
+Clicking on one of the arrow icons in the scroll bar moves the
+highlight by one item in that direction.  Clicking on the scroll bar
+above or below the small "thumb" box is equivalent to pressing PgUp or
+PgDn.  You can go to a specific place in the list by dragging the
+thumb box.  The thumb shows your relative position in the list.
+
+
+File Selectors
+
+When you open a file or save it under a new name, you will use a file
+selector.  A file selector is a combination of an input field and a
+list box.  You can choose a file name either by typing it in the input
+field or by selecting it from the list.
+
+To choose a file from the list box, use the arrow keys or mouse to
+highlight it, then press Enter.  You can also start typing the file
+name when the cursor is in the list box and the nearest match will be
+highlighted.
+
+You can change what files are displayed in the list by entering a file
+specification like C: or ..\MSGS in the input line.
+
+If you don't enter a file extension, it defaults to .MSG.
+
+The input field has a history list which you can access by pressing
+Down Arrow when the cursor is in the input line, or by clicking on the
+arrow icon next to the input line with the mouse.  The history list
+lets you select from the last few file names you entered.
+
+                                   
+                                   
+                                   
+                             MESSAGE FILES
+                                   
+                                   
+Message files have the extension .MSG.   Each message file has an
+associated header file with the extension .SHM.  This file contains
+the names of the nouns and cases you've used in the corresponding .MSG
+file.  The Message Editor also uses two other files:  VERBS.SH, which
+contains the names of the verbs used in the game; and TALKERS.SH,
+which contains the names of the talkers.  The .SHM file and NOUNS.SH
+and VERBS.SH are used by the SCI programmers to connect .MSG files and
+their program source code.  It is not necessary to keep NOUNS.SH and
+VERBS.SH in the current directory:  by setting the SINCLUDE
+environment variable to point to the appropriate directory, the
+Message Editor will find them there.  The .SHM files that go with .MSG
+files are always created and searched for in the directory that
+contains the associated .MSG file.
+
+
+File Locking
+
+The Message Editor uses a couple of mechanisms to make sure that two
+people don't destroy each other's changes when working on the same
+file.
+
+If you are the first person to use ME on a message file, the file will
+be locked until you finish with it.  If another person tries to use
+that file, they will only be able to view it without making changes.
+The title of the file at the top of the window will include "(Read
+Only)" to indicate this fact.  The file has its read-only attribute
+set during this period, so you can manually unlock a file if necessary
+by using the DOS command ATTRIB command to unlock it, like so:
+
+               ATTRIB -R xxx.MSG
+
+where xxx.MSG represents the name of the actual file.
+
+The other situation where a file is locked is when you are adding a
+new define (noun, verb, talker or case).  If you add it while entering
+a message, the file is locked for just the time it takes to update.
+If you bring up the list box for the particular kind of define, the
+file is locked during the time you have the list box open.
+
+                                   
+                                   
+                                   
+                             MENU COMMANDS
+                                   
+                                   
+
+System Menu
+
+
+System | About
+
+The About Box shows the current version and date of the Message
+Editor, copyright information, and who wrote it.
+
+
+File Menu
+
+
+File | Open
+
+This lets you open a message file to work with.  The equivalent hotkey
+is F3.
+
+
+File | New
+
+This lets you start from scratch and create a new message file.
+
+
+File | Save
+
+This choice saves the current message file.  The hotkey is  F2.
+
+
+File | Save As
+
+This lets you save the current message file under a different name.
+You would use this choice if you're saving an new (untitled) file, or
+if you want to save to a different drive or directory, or if you
+simply want to make a copy of the current file under a different name.
+
+
+File | Print
+
+This choice prints the current message file.
+
+You can print in four formats:  full, abbreviated, text-only, or
+Message Compiler-compatible.  The abbreviated format resembles the
+display on the main screen:  there is one line for each message, which
+is truncated to fit.  Text-only just prints the text of each message.
+The Message Compiler format adds the special codes the Message
+Compiler uses to identify message parts like noun or verb.  This can
+be handy if you need to make a lot of changes to a message file:  just
+print to a Message Compiler-compatible file, make your changes using
+your preferred word processor, then run the Message Compiler on the
+result to recreate the message file.
+
+You can print the current file or a set of files.  If the latter, you
+specify the files you want to print by listing file specifications
+(like 1*.MSG) separated by spaces or semicolons.
+
+You have the choice of printing to a file or directly to the printer.
+If you print to the printer, you must either have a local printer or
+have run the NetWare CAPTURE command to send print output to the
+network printer.  If you print to a text file, you can use the text
+file for viewing in Brief.  You can also print it later using NPRINT
+or SP.
+
+The SP program on the network uses compressed print and adds its own
+header.  If you print to a file and want to use SP to print that file
+later, check the SP Output option, which will use a wider page width
+and a shorter page height to accomodate SP.  This is especially useful
+with the abbreviated format.
+
+The equivalent hot key is F4.
+
+
+File | Nouns
+
+This lets you add and delete nouns or change their names.  It is
+equivalent to editing the current file's .SHM file without worrying
+about assigning unique numbers.  The hotkey is F5.
+
+
+File | Verbs
+
+This lets you add and delete verbs or change their names.  It is
+equivalent to editing the VERBS.SH without worrying about assigning
+unique numbers.  The hotkey is F6.
+
+
+File | Cases
+
+This lets you add and delete cases or change their names.  It is
+equivalent to editing the current file's .SHM without worrying about
+assigning unique numbers.  The equivalent hotkey is F7.
+
+
+File | Talkers
+
+This lets you add and delete talkers or change their names.  It is
+equivalent to editing TALKERS.SH without worrying about assigning
+unique numbers.  The equivalent hotkey is F8.
+
+
+File | Exit
+
+Use this choice to exit the Message Editor.  The equivalent hotkey is
+Alt+X.
+
+
+
+Edit Menu
+
+The Edit Menu contains choices for adding, deleting, copying, pasting
+and clearing items from lists.  Usually you'll use these commands on
+the message list.  But they can also be used when you have the nouns,
+verbs, cases or talkers list on the screen (see the File Menu).
+
+
+Edit | Add
+
+This choice lets you add a new item.  A dialog box will pop up for you
+to add the information for the new item.  The noun, verb, case and
+sequence number default to adding the new message to the end of the
+current sequence.  After accepting the dialog, the item will be
+inserted into the list in alphabetical order.  The equivalent hotkey
+is Ins.
+
+
+Edit | Change
+
+This choice lets you change the currently highlighted item.  After
+changing the item's information in the dialog box, the item will be
+moved in the list, if necessary to keep it in alphabetical order.  The
+equivalent hotkey is Enter.
+
+Edit | Cut
+
+This choice deletes an entry and copies it to the scrap, where it can
+be inserted back via the  Edit|Paste or Edit|Paste Add command.
+Unlike with the Edit|Clear command, you won't be asked to confirm your
+choice, since if you make a mistake you can just paste the entry back.
+If the deletion creates a gap in a message sequence, you will asked if
+you want to renumber the sequence to close up the gap.  The equivalent
+hotkey is Shift+Del.
+
+
+Edit | Copy
+
+This choice copies the current entry to the scrap, where it can be
+inserted back via the Edit|Paste or Edit|Paste Add command.  The
+equivalent hotkey is Ctrl+Ins.
+
+
+Edit | Paste
+
+This choice inserts the entry in the scrap into the current sequence
+in the list.  Entries go into the scrap when they are copied or
+pasted.  If the noun, verb or case of the inserted message is
+different from that of the current sequence, you will be asked to
+confirm your choice.  The equivalent hotkey is Shift+Ins.
+
+
+Edit | Paste Add
+
+This choice adds the entry in the scrap at the end of the current
+sequence in the list.  Entries go into the scrap when they are copied
+or pasted.  If the noun, verb or case of the added message is
+different from that of the current sequence, you will be asked to
+confirm your choice.  The equivalent hotkey is Ctrl+A.
+
+
+Edit | Clear
+
+This choice deletes an entry without copying it to the scrap.  You
+might use this if you don't want to overwrite the entry already in the
+scrap.  You will be asked to confirm the deletion.  If the deletion
+creates a gap in a message sequence, you will asked if you want to
+renumber the sequence to close up the gap.  The equivalent hotkey is
+Del.
+
+
+Edit | Insert in sequence
+
+This choice is like Edit|Add except that the new message is inserted
+into the sequence instead of being added to the end.  The equivalent
+hotkey is Ctrl+I.
+
+
+Edit | Renumber sequence
+
+This choice renumbers the sequence numbers in the current sequence.
+The equivalent hotkey is Ctrl+R.
+
+
+View Menu
+
+
+View | Center
+     
+The choice centers the currently selected message in the screen.  The
+equivalent hotkey is Ctrl+C.
+
+
+Search Menu
+
+
+Search | Find
+
+This menu choice lets you specify what to search for and what files to
+search in.  You can search for any combination of message text, noun,
+verb, case, talker, and comment text.
+
+If you want to search for text either in a message or in a comment,
+enter it in the "Message text" or "Comment text" field, respectively.
+Any text can be searched for, and can include spaces and partial
+words.  Both these fields maintain history lists, indicated by the
+arrow at the right.  When the cursor is in one of these fields, you
+can view and choose from your previous entries by pressing Down Arrow.
+
+You can also search for a specific noun, verb, case and talker.  The
+verb and talker fields are combo box fields, which means you can press
+Down Arrow in them to see a list of all verbs and talkers.
+
+You can combine any of these fields to find inclusive matches.  For
+example, you can enter "boots" in the "Message text" field and "ROGER"
+in the talker field to find all messages where Rogers says "boots".
+
+You next decide whether to search in the current file, or in a set of
+files.  If you choose to search a set of files, you can specify the
+files by entering a wildcard in the "Files to search" field.  You can
+also just enter the name of a single file in this field.
+
+If you are searching a set of files, and the current file has unsaved
+changes, you will be asked if you want to save before searching other
+files.
+
+You can choose to make the search case-sensitive by checking the
+corresponding field.
+
+If a match is found, the file is displayed and the message with the
+match is highlighted.
+
+
+Search | Find Next
+
+This choice repeats the previous search, if it was successful.  The
+search begins at the current position in the current file.  If you had
+chosen to search a set of files, then next file in the set will then
+be searched.
+
+The equivalent hotkey is Ctrl+L.
+
+
+Audio Menu
+
+You can play and hear the recorded audio files for messages by using
+commands on the {Audio} menu.  After an audio starts to play, you can
+cancel it by pressing any key or clicking the mouse.
+
+The Message Editor uses the standard 'where' file to specify the audio
+driver to use ("audDrv=") and where the audio files are located
+("audio=").  If your 'where' file has a different name than WHERE or
+if it's located in another directory, using the -w command line
+option.  The "audDMA=", "audIRQ" and "audioSize" entries in the
+'where' file are respected to indicate the DMA line, IRQ line and
+buffer size respectively.
+
+
+Audio | Play
+     
+The Audio|Play menu choice plays the current message's audio file.
+You can also invoke this command by clicking on the corresponding
+entry in the status line.
+
+To stop the currently playing audio, press any key or click the mouse.
+
+The equivalent hotkey is Ctrl+P.
+
+
+Audio | Play Rest
+     
+This menu choice plays the current message's audio, then continues by
+playing the rest of the messages in the file.  To stop playing, press
+any key or click the mouse.
+
+The equivalent hotkey is Ctrl+A.
+
+
+Audio | Toggle Audio File Names
+     
+This menu choice toggles the display of message audio file names in
+the message list.
+
+                                   
+                                   
+                                   
+                              TRANSLATING
+                                   
+                                   
+To translate message files, start ME with the -t command line option.
+
+When you translate, you work with two files simultaneously:  a source
+file you specify at the command line or via the File|Open menu choice,
+and a translation file with the same name and an extension of .TRN.
+You can use a different extension by putting the extension after the
+-t option on the command line.  To use .GER as the extension of the
+translation file, start ME with -tGER.
+
+You can't change or add messages to the source file.  When you choose
+the Edit|Change command you will be able to enter the translation text
+into the translation field, but you won't be able to change the
+original.  You can't translate reference messages.  Other commands are
+disabled that aren't needed for translation work.
+
+You can copy and paste between translated messages.  When you paste,
+the currently selected message's translation text is replaced with the
+text you copied.
+
+Whenever a message is added or changed in the original file, it is
+stamped with the current date.  When that message is translated (or a
+change is made to its translation), the message in the translation
+file is stamped with the original's datestamp.  Therefore, the Message
+Editor can show you which messages have changed since they were last
+translated.  Such messages are displayed in red (or have an asterisk
+beside them).
+
+If a message's noun, verb, case or sequence changes after it has been
+translated, the next time that file is edited with the Message Editor,
+the translated message's noun, verb, case or sequence is changed to
+match and a message to this effect is displayed.
+
+If an original message is deleted, the next time the translated file
+is edited with the Message Editor the translated message will be
+deleted.  A message to this effect is displayed.
+
+The MEXLTDIF utility can be used to display the differences between
+original files and the translation files.  Type MEXLTDIF for usage
+instructions.
+
+                                   
+                                   
+                                   
+                            CHANGES HISTORY
+                                   
+                                   
+
+
+4.321 3/15/93   Fixed bug where initializing read-only field was
+                overwriting memory.
+                
+4.320 2/11/93   Temporarily permit sequence numbers of 36, but warn
+                them.
+                
+4.310 2/10/93   Read 'audioSize=' parameter in where file to set audio
+                buffer size.
+                
+4.300 1/27/93   Added audio support.
+                
+4.211 1/13/93   Fixed memory leak from new StringF class.  Disable
+                Edit|Renumber Sequence if no messages in list.
+                Disable file list in Search|Find dialog box
+                initially.
+                
+4.21012/16/92   Change maximum sequence number to 35.  When inserting,
+                only renumber subsequent messages until we hit a gap.
+                Respect maximum sequence number when adding or
+                inserting.
+                
+4.20012/16/92   Made Edit|Paste insert into seqence and added
+                Edit|Paste Add.  Defaulted Search|Find to searching
+                current file.
+                
+4.11011/10/92   Don't eat EMS and don't hang if EMS isn't present.
+                
+4.100 11/2/92   Don't allow changing talker in a message that
+                references.  Don't consider a message with noun, verb
+                and case "ALL" referenced.  Removed 80386 code.
+                
+4.010 8/20/92   Changed page height when printing to avoid overfilling
+                pages when printed on the HP LaserJet.
+                
+4.000  8/6/92   Changed file format to include datestamps and
+                reference sequence numbers (just in case they're ever
+                needed).
+                
+                Added reference fields.
+                
+                Allow searching for translated text.
+                
+                Added ability to turn off pagination (including page
+                headers) when printing.  Delete message file when
+                writing, so that the network owner is updated.  Fixed
+                bug that didn't allow adding new messages when the
+                previous file edited was read-only.  Fixed bug where
+                accidentally typing characters into a readonly memo
+                field activated hotkeys.  Fixed some inconsistencies
+                with disabling commands when file is readonly or
+                being translated, or when a definitions list box is
+                up.
+                
+3.411 7/24/92   Replaced 386 with 286 code generation.
+                
+3.410 7/20/92   Changed to BC++ 3.1.  Added optimizations, including
+                386 code generation.  Replaced | with paragraph
+                symbol in message list.  Fixed bug in TV library
+                where using a combo box list to enter a string of
+                maximum length showed garbage in the field.
+                
+3.400  7/8/92   Added new sequence number capabilities:  adding adds
+                to end of sequence, deleting asks if user wants to
+                close up sequence.  New commands added for inserting
+                into and renumbering a sequence.
+                
+                Made next/prior buttons use original message fields to
+                determine what is considered "next" or "prior."
+                
+                Augmented -t command line option to allow following it
+                with extension of translation file.  Added -h command
+                line option to put screen in 50 line mode.  Change
+                program exit accelerator key to Alt+F4, but still
+                allow Alt+X.
+                
+                Fixed bug where copying and then pasting a define gave
+                it a number of 0 instead of assigning a new number.
+                Fixed bug where a missing .SHM file didn't default
+                correctly.
+                
+3.340 6/10/92   Removed heapchecking from TV library, which was
+                slowing file reading down enormously.  Don't reread
+                define lists unless file's timestamp changed.  Show
+                whether editing nouns or cases in lists instead of
+                just showing file name.  Changed status messages to
+                display in the middle of the screen.  Give audible
+                signals when searching.  Prohibit deleting, copying
+                or changing 'ALL' define.  Changed hotkey for noun
+                field to Alt+U.
+                
+3.331  6/5/92   Added 'text-only' print format.  Fixed message box
+                displayed when printing so box is big enough for
+                filename.  Messages can be copied even if file is
+                read-only.
+                
+3.330  6/5/92   Wordwrap added.
+                
+                Confirm cancelling out of a define list if changes
+                made.  Made so compiler-format print output doesn't
+                pad end of lines with blanks.
+                
+                .SHM file is always searched for and/or created in
+                same directory as associated message file.  Fixed
+                inconsequential bug where .SHM file wasn't marked
+                with correct version number.
+                
+                Make so deleting a message updates the bottom box.
+                
+3.270 4/29/92   Added support for printing a set of files at once.
+                
+                When editing and using Next and Prior buttons, don't
+                move edit window.  Default talker to NARRATOR.
+                
+3.260           Main window shows complete define names instead of
+                truncating them.  Added a message pane below list to
+                show more of selected message.
+                
+                Added "abbreviated" print option.  Added "SP output"
+                option.
+                
+                Added View menu with Center choice.
+                
+                Added Next and Prior buttons to edit dialog.
+                
+                Updated translation support.  Allow editing a define
+                file even if current message file is locked.  Removed
+                "Shift+Del Cut" from status line to avoid someone
+                accidentally clicking on it while scrolling.
+                
+3.250           Fixed bug where editing a define could change its
+                number.  Fixed bug where editing a message without
+                changing it could make the program think the file had
+                been modified.  Fixed bug where adding the same case
+                to two different files one right after the other hung
+                the program.
+                
+3.241  4/3/92   Added ability to search for text in comments.  Added
+                pick lists for choosing verbs and talkers to search
+                for.  Removed message warning that file is readonly.
+                
+3.240  4/2/92   Added ability to search for nouns, verbs, cases and/or
+                talkers.
+                
+3.231  4/2/92   Fixed bug where escaping from defines list didn't
+                unlock the associated file.
+                
+3.230  4/1/92   Enabled search function to search file(s) for text in
+                messages.
+                
+                Added better error checking for insufficient memory.
+                Fixed bug preventing alpha-selection from case list.
+                
+3.220 3/27/92   Fixed bug where escaping from cases list hung machine.
+                Made it so escaping from cases, defines, talkers and
+                verbs list without having made any changes didn't
+                reread header file.
+                
+                Changed some limits:  maximum noun, verb or case
+                number is now 255; max module number is 46656; and
+                max sequence number is 36.
+                
+3.211 3/26/92   Fixed bug where cutting then pasting dumped user to
+                DOS.  Fixed bug that prevented talker numbers from
+                appearing in the talkers list.  Flush keyboard after
+                a list box key so user can hold down arrow keys,
+                e.g., and scrolling will stop as soon as he lets up.
+                Added doubleclick capability to list box.
+                
+3.210 3/12/92   Fixed several memory corruption bugs by changing to
+                new list box management scheme.
+                
+3.200 2/25/92   Worked around Turbo Vision bug where inserting text at
+                end of a message could cause it to be lost.
+                Increased maximum number of verbs to 256 and
+                decreased maximum number of nouns from 999 to 255.
+                
+3.117 2/21/92   First printed documentation.
+                
+
+

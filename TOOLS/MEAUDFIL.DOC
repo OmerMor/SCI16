@@ -1,0 +1,255 @@
+Message Audio File Utility                                      Page 1
+
+                MESSAGE   AUDIO   FILE   UTILITY   1.10
+                                   
+                                   
+                         Sierra On-Line, Inc.
+                              Mark Wilden
+                                   
+                                   
+                                   
+This document describes how to use MEAUDFIL, the Message Audio File
+Utility.  The program copies or renames between two different audio
+file naming schemes and checks for the existence of files in either
+naming scheme and sync files.  This document includes an overview of
+the program's use, the syntax for using it, examples of use, the two
+naming conventions and a summary of changes to the program.
+
+
+
+Overview
+
+The SCI interpreter expects message audio files to be named according
+to one scheme.  These files begin with '@' (for 'audio') and will be
+referred to here as '@ files.'  However, music technicians need to use
+different names when they work with the files.  These files will be
+referred to as 'work files.'  Sync files have the same names as '@
+files,' except that the '@' is replaced by '#'.
+
+The process of copying or renaming @ files to work files is referred
+to as 'exporting,' and the opposite process is referred to as
+'importing.'
+
+The link between the two naming schemes is an index file called
+MEAUDFIL.IDX.  This file is created by the MESCRIPT message script
+printing program and contains both names for each audio file.
+MEAUDFIL reads this file to determine how to copy or rename a given @
+or work file to the alternate name.
+
+The audio file production process begins with a CD-audio script
+produced by MESCRIPT and a bunch of audio tape.  Technicians use the
+work file names listed in the script to create an work file for each
+message.  After processing, they use MEAUDFIL to import these files to
+their @ equivalents.
+
+After this initial pass is completed, the technician may need to go
+back and work on an @ file.  He will first use MEAUDFIL to export the
+file to an work file.  If the file uses 44K sampling, BUILDSFI is run
+to create an necessary auxiliary file with an extension of .SFI.
+After working with the file, he will use MEAUDFIL to import the work
+file back to an @ file.
+
+MEAUDFIL can also be used to check the existence of files in one or
+the other naming scheme.  It can restrict its operations (both copying
+and checking) to certain talkers, certain rooms, or certain talkers in
+certain rooms.
+
+
+
+Usage
+
+In the following sections, items in square brackets are optional.
+
+Exporting
+
+To export files from @ file names to work file names, use this form:
+
+ MEAUDFIL copy -x [-44 [-s<.SFI-dest>]] [source [dest]]
+
+-x means you want to export.
+
+[-44] means the file uses 44K sampling.  The work file will have an
+extension of .SFD (instead of .AUD) and BUILDSFI will be run to create
+a .SFI file for it.
+
+[-s<.SFI-dest>] indicates the directory you want the .SFI files placed
+in after BUILDSFI is run.  This option can only be used with the -44
+option.  If you don't specify this option, the .SFI files are left in
+the same directory as the .SFD files.
+
+[source [dest]] indicates that you can optionally specify a source and
+destination directory for the files.  When exporting, the source
+directory contains the @ files and the destination directory will
+receive the work files.  Note that if you need to specify a
+destination directory, you must specify the source directory.  If the
+source directory is the current directory, use '.' for the source
+directory.  If the source directory is the same as the destination
+directory (as it would be if you specified neither one), files will be
+renamed, not copied.
+
+
+
+Importing
+
+To import files from work to @ file names, use this form:
+
+ MEAUDFIL copy -i [-44] [source [dest]]
+
+-i means you want to import.
+
+[-44] means you want to import 44K sample rate files with the
+extension .SFD, instead of .AUD.
+
+[source [dest]] has the same meaning as it does for exporting, except
+that in this case the source directory contains the work files and the
+destination directory will be used for the @ files.
+
+
+
+Checking for audio file existence
+
+To check for the existence of work files, use this form:
+
+ MEAUDFIL check -x [-44] [source]
+
+-x means you want to check for work files.
+
+[-44] means you want to check for 44K sample rate work files with the
+extension .SFD, instead of .AUD.
+
+[source] optionally indicates the directory containing the work files,
+if not the current directory.
+
+To check for the existence of @ files, use this form:
+
+ MEAUDFIL check -i [source]
+
+-i means you want to check for @ files.
+
+[source] indicates the directory containing the @ files, if they're
+not the current directory.
+
+
+
+Checking for sync file existence
+
+To check for the existence of sync files, use this form:
+
+ MEAUDFIL syncs [source]
+
+[source] optionally indicates the directory containing the sync files,
+if not the current directory.
+
+Other parameters
+
+These are other parameters than can be used with any of the above
+commands:
+
+-t<talker> lets you narrow the command to act only on the specified
+talker.  You can use more than one -t parameter, in which case the
+command will act on any of the specified talkers.
+
+-T<talker> lets you narrow the command to act only on all talkers but
+the specified talker.  You can use more than one -T parameter, in
+which case the command will exclude all the specified talkers.  You
+can either include or exclude talkers, not both.
+
+-r<room>  lets you narrow the command to act only on the specified
+room.  You can use more than one.  If you have a combination of -t
+parameters and -r parameters, the command will apply to files that are
+for any of the specified talkers in any of the specified rooms.
+
+-m<.IDX-dir> lets you specify the directory where the MEAUDFIL.IDX
+index file is located.  You will normally run the program from this
+directory, making this parameter unnecessary.
+
+
+
+Examples
+
+ MEAUDFIL copy -x -44
+
+would export all @ files in the current directory by renaming them to
+work files with the extension .SFD.  BUILDSFI would be run and the
+resulting .SFI files would be put in the current directory.
+
+ MEAUDFIL copy -x -tROGER -r100 . C:\work
+
+would export the @ files in the current directory ('.') that were for
+Roger's lines in room 100.  The work files would be placed in C:\work.
+The extension of the work files would be .AUD.
+
+ MEAUDFIL copy -i -mG: C:\work
+
+would import all work files in C:\work to the current directory, and
+would look on G: for MEAUDFIL.IDX.
+
+ MEAUDFIL check -i
+
+would list the names of all missing @ files in the current directory.
+
+MEAUDFIL check -i -44
+
+would list the names of all missing @ files in the current directory.
+The files to be checked are 44K sample files, so have the extension
+.SFD instead of .AUD.
+
+ MEAUDFIL check -x -tROGER -tGRAHAM -r100 D:
+
+would list the names of all missing work files on drive D: that were
+for either Roger or Graham in room 100.
+
+ MEAUDFIL syncs -TNARRATOR
+
+would list the names of all missing sync files, except for NARRATOR
+lines.
+
+
+
+Naming schemes
+
+The @ file naming scheme lets the interpreter find the message for a
+given room, noun, verb, case, and sequence by looking at the file
+name.  In order to fit this much information in 11 characters, these
+numbers are encoded using a base-36 numbering system, where decimal
+ten is represented by 'A', decimal 36 is represented by 'Z', etc.
+
+The name is laid out like this:
+
+ @RRRNNVV.CCS
+
+where RRR represents the room number, NN the noun number, VV the verb
+number, CC the case number and S the sequence number.
+
+The sync file naming scheme is exactly the same as that for audio
+files, except that the '@' is replaced with '#'.
+
+The work file naming scheme also uses base-36 and is laid out like
+this:
+
+ TTRRRSSS.ext
+
+where TT represents the talker number, RRR the room number, SSS the
+sequential message number of that talker in that room (which is not
+the same as the sequence number in the @ file name).  The script
+produced by MESCRIPT includes a key to these talker and room numbers.
+
+
+
+
+
+                                   
+                                   
+                                   
+                            CHANGES HISTORY
+                                   
+                                   
+1.100 2/15/93   Added ability to check syncs.  Allow excluding
+                talkers.
+                
+1.01012/22/92   Don't abort program if a file can't be found.
+                
+1.000 7/27/92   Initial version.
+                
+
+

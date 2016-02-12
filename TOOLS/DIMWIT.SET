@@ -1,0 +1,164 @@
+; Input setup file for DIMWIT
+;
+;
+;  The directory from which to read 'busted' audio files (*.AUD and @*.*)
+;   (can be specified relative to current directory) 
+;AUDPATH m:11k
+;
+;
+;  The directory from which to read message resources (*.MSG)
+;   and MEAUDFIL.IDX
+;   (can be specified relative to current directory) 
+;MSGPATH o:
+;
+;
+;  The directory to read load files from ; defaults to current directory.
+;   (can be specified relative to current directory) 
+;LOADPATH srcdir\
+;
+;
+;  The input sample file to be loaded initially; defaults to none.
+;   (must not include path, must not exceed 12 characters including '.')
+;LOADNAME src.123
+;
+;
+;  The directory to write save files to; defaults to current directory.
+;   (can be specified relative to current directory) 
+;SAVEPATH destdir\
+;
+;
+;  The output sample file to be saved to initially; defaults to none.
+;   (must not include path, must not exceed 12 characters including '.')
+;SAVENAME dest.123
+;
+;
+;  Bypass write to output sample file during saves; defaults to write to.
+;NOSAVE
+;
+;
+;  The input cue file to be loaded initially; defaults to none.
+;   (can include path, must not exceed 44 characters)
+;QINNAME src\cue.in
+;
+;
+;  The record number of the input cue file to start with; defaults to 1.
+;QIN 10
+;
+;
+;  The output cue file to be updated initially; defaults to none.
+;   (can include path, must not exceed 44 characters)
+;QOUTNAME src\cue.out
+;
+;
+;  The record number of the output cue file to start with; defaults to eof.
+;QOUT 20
+;
+;
+;  Bypass write to output cue file during saves; defaults to write to
+;NOQSAVE
+;
+;
+;  Saves end times and cue numbers only to cue-out file only;
+;   defaults to normal audio saves;
+;CUENUM
+;
+;
+;  Minimum amount of time of relative noise required to recognize sound;
+;   defaults to .5 seconds.
+;SNDLEN 1.23
+;
+;
+;  Minimum amount of time of relative silence required to delimit sound;
+;   defaults to .3 seconds.
+;SILLEN .09
+;
+;
+;  Amount of extra time prepended to found sounds; defaults to .05 seconds.
+;LEADIN .1
+;
+;
+;  Amount of extra time appended to found sounds; defaults to .20 seconds.
+;LEADOUT .09
+;
+;
+;  Amplitutde below which samples are considered as silence; defaults to 256.
+;NOISE 300
+;
+;
+;  Invoke the SX10 driver; defaults to don't invoke.
+;SX10
+;
+;
+;  Invoke the Sound Blaster driver; defaults to don't invoke.
+;BLASTER
+;
+;
+;  Invoke the CD-Rom driver; defaults to don't invoke.
+;CDROM
+;
+;
+;  Invoke the Covox driver; defaults to don't invoke.
+;COVOX
+;
+;
+;  Saved samples will be appended to the end of the save file;
+;   defaults to overwrite file.
+;APPEND
+;
+;
+;
+;  Saved samples will be zero'ed as they are written to the save file;
+;   defaults to don't alter.
+;ZERO
+;
+;
+;  Input samples are 8-bits long; defaults to 16-bits.
+;BYTES
+;
+;
+;  Input samples are monaural; defaults to stereo.
+;MONO
+;
+;
+;  Input samples are at this quantity per second; defaults to 44100.
+;RATE 11000
+;
+;
+;  Mouse clicks are delayed this number of sixtieth-seconds before
+;   starting to repeat; defaults to 5.
+;DELAY 10
+;
+;
+;  Mouse clicks are delayed this number of sixtieth-seconds before
+;   continuing to repeat; defaults to 2.
+;REPEAT 4
+;
+;
+;  The next find will begin at this time into the input file;
+;   defaults to 0;
+;FINDBEG 1:2.3
+;
+;
+;  The next find will end at this time into the input file;
+;   defaults to 0;
+;FINDEND 1:23
+;
+;
+;  The next play will begin at this time into the input file;
+;   defaults to 0;
+;PLAYBEG :5
+;
+;
+;  The next play will end at this time into the input file;
+;   defaults to 0;
+;PLAYEND 6.
+;
+;
+;  The next save will begin at this time into the input file;
+;   defaults to 0;
+;SAVEBEG 1:
+;
+;
+;  The next save will end at this time into the input file;
+;   defaults to 0;
+;SAVEEND 1:0.5

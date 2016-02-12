@@ -1,0 +1,21 @@
+q - quit
+` - toggle debug
+C - clear all breakpoints and exit debug
+D - exit debug
+
+b - set breakpoint - object,method
+B - set breakpoint - object,method (sticky)
+<ctrl>B - clear sticky obj,method brkpoint
+n - set breakpoint - script,offset
+N - set breakpoint - script,offset (sticky)
+<ctrl>N - clear sticky scr,offset brkpoint
+k - set breakpoint - kernel call #
+K - set breakpoint - kernel call (sticky)
+<ctrl>K - clear sticky kernel brkpoint
+t - set breakpoint - changed heap
+T - set breakpoint - changed hunk
+<ctrl>T - clear heap and hunk brkpoints
+R - break at the next return
+
+Enter - single step
+Tab - step across send
