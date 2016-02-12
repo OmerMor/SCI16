@@ -1,0 +1,120 @@
+						The SCI Debugger
+
+The SCI debugger is invoked by pressing Alt-D.  The debugging window
+will pop up in the upper right corner of the screen, and you may start
+issuing commands to the debugger.  To put the debugger away, just press
+Alt-D again.
+
+The debugging window looks something like this:
+
+
+
+     ---------------------------------
+     |                               |
+     |   current object              |
+     |                               |
+     |   opcode                      |
+     |                               |
+     |   acc:xxxx                    |
+     |                               |
+     |                               |
+     |    Stack           Parms      |
+     |     xxxx            xxxx      |
+     |     xxxx            xxxx      |
+     |     xxxx            ----      |
+     |     xxxx            ----      |
+     |     xxxx            ----      |
+     |                               |
+     ---------------------------------
+
+
+
+The fields are:
+
+current object
+	The name of the object whose method is currently executing.
+
+opcode
+	The next pmachine opcode to be executed.  While I won't go into the
+	details of all the opcodes, the critical ones for debugging are
+	'send' and 'callk', and 'ret'.
+	
+	send
+		Sends a message to the object whose ID is in the accumulator
+		of the pmachine (acc in the window above).  The selector and
+		arguments of the message are on the stack, the first five
+		elements of which are displayed in the 'Stack' column in the
+		window.  Sometimes a send is just a call to set or get the
+		value of a property, in which case you will not enter a method.
+		
+	callk
+		Calls the kernal routine displayed in the opcode.
+
+	ret
+		Returns to the caller of the current method or procedure.
+
+acc
+	The value in the pmachine accumulator.
+
+Stack
+	The first five elements on the pmachine stack.  A ---- here indicates
+	the end of the stack.
+
+Parms
+	The first five parameters to the current method or procedure.  A ----
+	here indicates the absence of a parameter.
+
+
+
+
+						Debugging Commands
+
+Commands to the debugger are single-key commands, sometimes followed by
+a prompt for a number or string.  The commands are:
+
+
+Return or mouse click
+	Single step to the next pmachine instruction.
+
+Tab
+	Step across a send or procedure call (not necessary in the case
+	of callk).  This is not always reliable.  One of these days, I'll
+	look into it.
+
+q
+	Quit, exitting to DOS.
+
+s
+	Toggle the send stack on/off.  While on, the send stack updates
+	when stepping in the debugger.
+
+i
+	Inspect an object.  You will be prompted for the object to inspect.
+	Enter either the name of the object (such as 'ego', without the quotes)
+	or its ID (remember to preceed hex numbers with a '$').  The property
+	names and values of the object will be displayed.
+
+	Pressing 'i' again (while the inspector window is up) will prompt you
+	for one of the object's selector names.  It will then display the
+	property corresponding to the selector either as a number/string pair
+	or as another inspector window.  Inspector windows can be nested
+	three deep.
+
+	To put away an inspector window, press any key but 'i'.
+
+a
+	Inspect the object whose ID is in the accumulator.  This is a quick
+	way to see which object a send opcode is about to send to.
+
+o
+	Display all objects in the heap.  (Same as (ShowObjs FALSE).)
+
+f
+	Display the free blocks in the heap.  (Same as (ShowFree).)
+
+g
+l
+t
+	Display the value of a global, local or temporary variable.  You will
+	be prompted for the number of the variable.
+

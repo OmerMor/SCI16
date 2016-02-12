@@ -1,0 +1,81 @@
+						A brief tutorial on active values.
+
+
+	An 'active value'	is a value which has some sort of side effect
+	when accessed.
+	
+	For example, imagine that you have a class 'Car' with a 'speed'
+	property which, throughout your code, you set with
+
+		(myCar speed:newSpeed)
+
+	and query with
+
+		(myCar speed?)
+
+	As your application gets more sophisticated, you decide that you
+	want to change the fuel consumption (contained in the property
+	'fuelRate') whenever you change speed.  Without active values, this
+	would require adding a method 'setSpeed' which also sets the fuel
+	consumption and then going through your code and changing all
+	accesses to 'speed' to invocations of 'setSpeed'.  There is an
+	easier way -- make 'speed' an active value.
+
+	Making speed an active value could be done ALMOST transparently
+	with the previous compiler/interpreter combination.  To convert a
+	property to an active value in SCI, just make the selector name a
+	method which accesses a property with a new name.  In the above
+	example, we might rename the speed property '_speed', then write
+	the 'speed' method as
+
+		(method (speed newSpeed)
+			(if argc
+				(= _speed newSpeed)
+				(self setFuelConsumption:)
+			)
+			(return _speed)
+		)
+
+	where setFuelConsumption: is a method which calculates fuel consumption
+	based on the car's speed.  Note that the code to set the speed is still
+
+		(myCar speed:newSpeed)
+
+	but to determine the speed you now need to write
+
+		(myCar speed:)
+
+	The change was not quite transparent.
+
+
+	With the new modifications to the compiler/interpreter combiniation,
+	the conversion of speed to an active value is completely transparent,
+	since 'speed:' and 'speed?' are entirely equivalent.  Thus,
+
+		(myCar speed?)
+		
+	still returns the car's speed, even though 'speed' is now a selector
+	for a method rather than a property of class Car.
+
+
+	There is another way to get the same functionality which you might use
+	depending on your point of view.  Note that in the above example we
+	connected speed and fuel consumption by making speed an active value
+	when set.  We could equally well have made fuelRate an active value
+	when read by defining '_fuelRate' as the property and writing fuelRate
+	as a method:
+
+		(method (fuelRate newRate)
+			(if argc
+				(= _fuelRate newRate)
+			else
+				(self setFuelConsumption:)
+			)
+			(return _fuelRate)
+		)
+
+	Now, rather than setting the fuel rate whenever the speed changes,
+	we calculate it whenever it's needed.  You would pick the method
+	to use depending  on the expected relative frequency of changing speed
+	and needing to know the fuel consumption.
+

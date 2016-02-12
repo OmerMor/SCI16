@@ -1,0 +1,66 @@
+					GRAVITY SIMULATION IN SCI
+
+Standard gravitational acceleration is 9.8 m/s/s.  To convert this to the
+SCI simulation units of pixels/cycle/cycle, we use the following formula
+
+
+	g = 9.8 * h/(f ** 2)
+
+where
+
+	h	is the height, in pixels, of a one meter tall object
+
+	f	is the frequency, in cycles/second, of the animation cycles
+
+
+Normal animation speed is 10 animation cycles/second, so in general this
+reduces to
+
+	g = .098 * h
+
+
+A standard sized actor is about 33 pixels tall.  Assuming that the actor is
+a meter tall, we get a default g of
+
+	g = 3.23
+	  = 3
+
+
+
+
+							JumpTo
+
+The JumpTo motion class is designed to allow an actor to jump to a certain
+point on the screen.  This is done by assuming that, in the Jump class, the
+horizontal and vertical speeds are related by the scale factor n.  We then
+solve for the magnitude which gets us where we want to go.
+
+The x coordinate of the endpoint is given by
+
+	x1 = x0 + v * t
+
+so that
+
+	t = (x1 - x0)/v
+
+The y coordinate is given by
+
+	y1	= y0 + n * v * t + g * t**2/2
+
+		= y0 + n * v * (x1 - x0)/v + g * (x1 - x0)**2/(2 * v**2)
+
+
+writing
+
+	dx = x1 - x0
+	dy = y1 - y0
+
+we have
+
+	dy - n * dx = g * dx**2/(2 * v**2)
+
+so that
+
+	v = sqrt(g * dx**2/(2 * (dy - dx)))
+
+

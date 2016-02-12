@@ -1,0 +1,40 @@
+									Fragments by size
+
+
+Types of fragments:
+
+
+06 00 xx xx yy yy
+	This is a list header.
+		xxxx is the address of the first node in the list
+		yyyy is the address of the last node in the list  
+	A list header gets created when the add: method of the associated list
+	first gets invoked.  To prevent fragmentation, do an add: with no 
+	arguments early on in your code, creating the node then.
+
+
+0a 00 nn nn pp pp kk kk dd dd
+	This is a list node.
+		nnnn is the address of the next node in the list
+		pppp is the address of the previous node in the list
+		dddd is the address of the data
+		kkkk is the key which is used to look up the data
+	Typically dddd and kkkk are the same, since an object's ID is used as
+	its key.  You can follow the list in the debugger using the '[' and ']'
+	keys.  Use the right arrow key to move the display so that nnnn is the
+	first value displayed.  Then'[' will change the display to the next
+	node in the list and ']' will move to the previous node.
+
+	Determining what the fragment is may or may not be easy.  If this is
+	a node for an object, dddd will be the address of the object and you
+	can inspect that address to determine what it is.  Otherwise, think...
+
+
+14 00 nn nn pp pp kk kk  ...
+	This is a node with information on a load module.
+		nnnn is the address of the next load module node
+		pppp is the address of the previous load module node
+		kkkk is the number of the load module
+	If you encounter this, preload the module with a (ScriptID kkkk)
+	at the appropriate time.
+

@@ -1,0 +1,191 @@
+------------------------------------------------------------------------------
+Derivation of the modified Bresenham line algorithm used in the Motion class.
+See Foley & van Dam, Fundamentals of Interactive Computer Graphics,
+pages 433-435 for the derivation of the algorithm for unit steps on the
+x-axis.
+------------------------------------------------------------------------------
+
+
+		o		o		o
+	  (r, q)
+
+
+					(r+dx, q+dy)
+		o		o		o
+						s
+
+						-
+						t
+		o		o		o
+				    (r+dx, q+dy+1)
+
+
+Assume that we want to move between the points (0,0) and (DX,DY).  The line
+is described by
+
+	y = (DY/DX)x
+
+We will make the assumption that (DY/DX) <= 1.  If this is not the case,
+the variables may just be interchanged.
+
+If we move the distance dx along the x-axis from the point (r,q), we will
+find that in general the line falls between the two pixels (r+dx, q+dy)
+and (r+dx, q+dy+1) where
+
+	dy = floor((DY/DX)dx)
+
+Designating the distances between the line and the pixels on either side of
+it by s and t, we may write
+
+	s = (DY/DX)(r+dx) - (q+dy)
+	t = (q+dy+1) - (DY/DX)(r+dx)
+
+If s > t, then the line is closer to the point (r+dx,q+dy+1), otherwise it is
+closer to (r+dx,q+dy).  To test this, we compute s-t.  If it is positive,
+the first point is chosen, otherwise the second:
+
+	s - t = 2(DY/DX)(r+dx) - 2(q+dy) - 1
+
+If DX is positive (as it is in the above figure), we retain the sign when we
+write
+
+	DX(s-t)	= 2DY(r+dx) - 2DX(q+dy) - DX								(1.1)
+			= 2(rDY - qDX) + R
+
+where
+
+	R = 2(DYdx - DXdy) - DX
+
+
+
+We call the quantity d(i) = DX(s-t) at the point (x(i-1),y(i-1)) the decision
+variable at that point.  We can compute the decision variable at one point
+from that at the previous point by writing
+
+	d(i) = 2(x(i-1)DY - y(i-1)DX) + R
+
+and 
+
+	d(i+1) = 2(x(i)DY - y(i)DX) + R
+
+so
+
+	d(i+1) - d(i) = 2DY(x(i) - x(i-1)) - 2DX(y(i) - y(i+1))
+
+But x(i) - x(i-1) = dx, so
+
+	d(i+1) = d(i) + 2DYdx - 2DX(y(i) - y(i-1))
+
+
+
+If d(i) >= 0, we select the point (r+dx,q+dy+1) so y(i) = y(i-1) + dy + 1 and
+
+	d(i+1) 	= d(i) + 2DYdx - 2DX(dy+1)
+			= d(i) + 2(DYdx - DXdy) - 2DX								(1.2)
+
+
+If d(i) < 0, we select the point (r+dx,q+dy) so y(i) = y(i-1) + dy and
+
+	d(i+1)	= d(i) + 2DYdx - 2DXdy
+			= d(i) + 2(DYdx - DXdy)									(1.3)
+
+
+
+The initial value of the decision variable, d(0) is obtained from equation
+(1.1) with r = 0, q = 0:
+
+	d(0) = 2(DYdx - DXdy) - DX
+
+
+
+------------------------------------------------------------------------------
+
+For motion in a different quadrant, the derivation goes similarly:
+
+
+				    (r+dx, q+dy-1)
+		o		o		o
+						t
+						-
+
+						s
+		o		o		o
+					(r+dx, q+dy)
+
+
+
+		o		o		o
+	  (r, q)	
+
+
+As before,
+
+	dy = floor((DY/DX)dx)
+
+is the signed (in this case negative) integer change in y for the step
+in the x direction.
+
+Thus writing the distance so that they are positive, we get
+
+	s = (q+dy) - (DY/DX)(r+dx)
+	t = (DY/DX)(r+dx) - (q+dy-1)
+
+and
+
+	s - t = 2(q+dy) - 2(DY/DX)(r+dx) - 1
+
+If DX is positive (as it is in the above figure), we retain the sign when we
+write
+
+	DX(s-t)	= 2DX(q+dy) - 2DY(r+dx) - DX								(2.1)
+			= 2(qDX - rDY) + R
+
+where
+
+	R = 2(DXdy - DYdx) - DX
+
+
+Thus,
+
+	d(i) = 2(y(i-1)DX - x(i-1)DY) + R
+
+and 
+
+	d(i+1) = 2(y(i)DX - x(i)DY) + R
+
+so
+
+	d(i+1) - d(i) = 2DX(y(i) - y(i+1)) - 2DY(x(i) - x(i-1))
+
+But x(i) - x(i-1) = dx, so
+
+	d(i+1) = d(i) + 2DX(y(i) - y(i-1)) - 2DYdx
+
+
+
+If d(i) >= 0, we select the point (r+dx,q+dy-1) so y(i) = y(i-1) + dy - 1 and
+
+	d(i+1) 	= d(i) + 2DX(dy-1) - 2DYdx
+			= d(i) + 2(DXdy - DYdx) - 2DX								(2.2)
+
+
+If d(i) < 0, we select the point (r+dx,q+dy) so y(i) = y(i-1) + dy and
+
+	d(i+1)	= d(i) + 2DXdy - 2DYdx
+			= d(i) + 2(DXdy - DYdx)									(2.3)
+
+
+
+The initial value of the decision variable, d(0) is obtained from equation
+(2.1) with r = 0, q = 0:
+
+	d(0) = 2(DXdy - DYdx) - DX
+
+
+
+
+------------------------------------------------------------------------------
+
+If the step along the major motion axis is negative, the above decision
+variables must be negated, since DX will now be negative.
+
