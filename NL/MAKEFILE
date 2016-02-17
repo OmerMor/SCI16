@@ -1,0 +1,182 @@
+# Makefile for the SCI interpreter and assorted drivers and utilities.
+
+# Do not use builtins (default) dependencies or actions -- everything
+# is explicitly declared here.
+.SUFFIXES
+# Execute commands directly, without invoking command.com.  
+.NOSHELL
+
+
+# Files to be compiled for debugging.  All others will be optimized.
+debug = 
+
+# Files to be compiled for speed optimization.  All others will be optimized
+# for space.
+speed = 
+
+# Files to be compiled with an assembly listing.
+list = 
+
+# Files which are used to make utilities.  These will use the default
+# libraries.
+utils = 
+
+
+# Flags used in C compilations:
+# -c				compile only
+# -DLINT_ARGS	define LINT_ARGS, to enable argument checking
+# -W3				give maximum number of error messages
+# -Zp				pack all structures
+# -ACw			compact model (small code, large data), DS != SS
+
+cFlags = -c -DLINT_ARGS -W3 -Zp -ACw
+
+
+# Flags used in assembly compilations:
+# MASM flags:
+# -ml				case sensitive
+# -s				write segments in order in which they occur
+# -t				write error output only
+# -z				display lines containing errors
+# -w2				maximum warning level
+# Preprocessor flags:
+# -e				'enter' and 'exit' are not keywordsxs
+
+asFlags = -a"-ml -s -t -z -w2" -p"-e"
+
+
+# Linker flags
+# /NOI			case sensitive
+# /M				create a link map
+# /NOE			
+# /LI				add line number info to map
+
+lFlags = /NOI /M /NOE /LI
+
+
+# Source files for library.
+s1  = nl.c parse.c saidf.c vocab.c query.c sema.c lists.c
+s2  = said.c pragma.c print.c syms.c
+s2d = saidd.c pragmad.c printd.c symsd.c
+src  = $(s1) $(s2)
+obj  = ..\dll.o $[f,,$(src),o]
+
+srcd = $(s1) $(s2d)
+objd = ..\dll.o $[f,,$(srcd),o]
+
+srcn = nlnull.c
+objn = ..\dll.o $[f,,$(srcn),o]
+
+
+
+############ METHODS FOR BUILDING OBJECT FILES  ############
+
+.c.o:
+	@%setenv include=../;../..
+#
+	%if %member($<, $(debug))
+		@%set dOpt = -Zi -Gs
+	%elseif %member($<, $(speed))
+		@%set dOpt = -Oaceglti -Gs
+	%else
+		@%set dOpt = -Oaceglsi -Gs
+	%endif
+#
+	%if %member($<, $(list))
+		:cl $(cFlags) $(dOpt) $(lOpt) -Fc -Fo$@ $<
+	%else
+		:cl $(cFlags) $(dOpt) $(lOpt) -Fo$@ $<
+	%endif
+	
+	
+.s.o:
+#
+#	Assemble for debugging if file is member of debug list.
+#
+	@%setenv include=../;../..
+	%if %member($<, $(debug))
+		:as $(asFlags) -d $<
+	%else
+		:as $(asFlags) $<
+	%end
+
+
+
+all: nl.dll nldebug.dll nlnull.dll
+
+
+nl.dll: nl.exe
+
+
+nl.exe: $(obj)
+	:link $(lFlags) <@<
+$[s," +\n",$**]
+nl.exe
+nl.map;
+<
+	exetodll nl
+
+
+
+nldebug.dll: nldebug.exe
+
+
+nldebug.exe: $(objd)
+	:link $(lFlags) <@<
+$[s," +\n",$**]
+nldebug.exe
+nldebug.map;
+<
+	exetodll nldebug
+
+
+
+nlnull.dll: nlnull.exe
+
+
+nlnull.exe: $(objn)
+	:link $(lFlags) <@<
+$[s," +\n",$**]
+nlnull.exe
+nlnull.map;
+<
+	exetodll nlnull
+
+
+
+############ METHODS FOR BUILDING .EXE FILES ############
+
+.o.exe:
+	link $(lFlags) <@<
+$[s," +\n",$**]
+$*.exe
+$*.map
+sx+slibce
+<
+
+
+############ METHODS FOR BUILDING .EXE FILES ############
+
+# Program root by itself builds the .exe file
+
+.exe.:	$*.exe
+	+echo done
+
+
+
+############ METHODS FOR BUILDING .COM FILES ############
+
+.exe.com:
+	exe2bin $< $*.com
+	+del $<
+	+del $*.map
+
+
+
+############ DRIVERS  ############
+
+.o.drv:
+	link $<;
+	exe2bin $* $@
+	+del $*.o
+	+del $*.exe
